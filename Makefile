@@ -11,40 +11,33 @@
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g
 RM = rm -rf
 
-SRC = src/fractol.c \
-src/mandelbrot.c \
-src/my_mlx.c \
-src/utils.c \
-src/julia.c \
-src/ft_atof_julia.c \
+SRC = src/main.c
 
 MLX = ./minilibx-linux
 
 OBJS = $(SRC:.c=.o)
-NAME = fractol
+NAME = cub3D
 
 all : $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C minilibx-linux/
 	@make -C libft/
-	@make -C ft_printf/
-	@$(CC) $(OBJS) -Lmlx_linux -lmlx_Linux -L$(MLX) -lXext -lX11 -lm -lz -L libft/ -lft -L ft_printf/ -lftprintf -o $(NAME)
+	@$(CC) $(OBJS) -Lmlx_linux -lmlx_Linux -L$(MLX) -lXext -lX11 -lm -lz -L libft/ -lft -o $(NAME)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -I$(MLX) -Imlx_linux -O3 -c $< -o $@
 
 clean :
 	@make clean -C libft/
-	@make clean -C ft_printf/
 	@$(RM) $(OBJS)
 
 fclean :
 	@make fclean -C libft/
-	@make fclean -C ft_printf/
 	@$(RM) $(OBJS) $(NAME)
 
 re : 
