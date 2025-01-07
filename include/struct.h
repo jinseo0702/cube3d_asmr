@@ -23,6 +23,9 @@ typedef struct  s_data
 
 typedef struct s_map
 {
+    int fd;
+    int high;
+    int width;
     char *NO;
     char *SO;
     char *WE;

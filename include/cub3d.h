@@ -13,6 +13,9 @@
 # include <unistd.h>
 # include <stdio.h>
 
-
+int map_parsing(char *map);
+void init_t_map(t_map *map_data);
+int check_size(t_map *map_data);
+int check_arg(char *str);
 
 #endif

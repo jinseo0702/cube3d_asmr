@@ -6,7 +6,7 @@
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 22:52:07 by jinseo            #+#    #+#             */
-/*   Updated: 2024/12/01 10:04:45 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/01/07 17:18:26 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ double		ft_atof(char *nptr);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
+int			ft_strrstr(const char *s1, const char *s2, int len);
 int			ft_isascii(int c);
 int			ft_isprint(int c);
 int			ft_toupper(int c);

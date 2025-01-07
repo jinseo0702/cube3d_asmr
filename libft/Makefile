@@ -45,6 +45,7 @@ SRCS = ft_isalnum.c \
 	ft_freenull.c \
 	ft_free_two.c \
 	ft_strchr_len.c \
+	ft_strrstr.c \
 	gnl_check_bonus/get_next_line.c \
 	gnl_check_bonus/get_next_line_utils.c \
 	gnl_check_bonus/get_next_line_bonus.c \
