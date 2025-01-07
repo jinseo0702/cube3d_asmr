@@ -1,4 +1,4 @@
-# ifdef STRUCT_H
+# ifndef STRUCT_H
 # define STRUCT_H
 
 typedef struct s_allimg
@@ -19,6 +19,18 @@ typedef struct  s_data
     int						width;      //화면 자체의 길이
 	int						height;     //화면 자체의 높이
     t_allimg   img;            //이미지를 넣을 때 필요한 구조체
-}   
+}   t_data;
+
+typedef struct s_map
+{
+    char *NO;
+    char *SO;
+    char *WE;
+    char *EA;
+    char *F;
+    char *C;
+    char **map;
+}   t_map;
+
 
 #endif
