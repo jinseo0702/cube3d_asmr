@@ -18,7 +18,6 @@
 # include "../libft/libft.h"
 # include "../libft/gnl_check_bonus/get_next_line.h"
 # include "../libft/gnl_check_bonus/get_next_line_bonus.h"
-# include "../ft_printf/libftprintf.h"
 # include <stdlib.h>
 # include <unistd.h>
 # include <math.h>

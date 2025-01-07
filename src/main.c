@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../include/cub3d.h"
 
 // 생각해보아야할 것
 //기본적으로 argv에 .cub파일만 받아오는지
@@ -26,7 +26,7 @@ int	ft_exit_handling(void *param)   // 이건 크로스 표시 컨트롤
 	exit (0);
 }
 
-void	init_fdf_program(t_data *data)
+void	init_cub3d_program(t_data *data)
 {
 	data->width = 2000;
 	data->height = 2000;
