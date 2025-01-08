@@ -26,6 +26,7 @@ typedef struct s_map
     int fd;
     int high;
     int width;
+    int m_high;//이 아래에 status를 넣을지 말지 고민중 입니다.
     char *NO;
     char *SO;
     char *WE;

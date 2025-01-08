@@ -17,5 +17,13 @@ int map_parsing(char *map);
 void init_t_map(t_map *map_data);
 int check_size(t_map *map_data);
 int check_arg(char *str);
+int dup_info(char *str, t_map *map_data);
+int is_right_map(char *str, t_map *map_data);
+int insert_data(t_map *map_data, char *map);
+
+
+//---------------------------------------------
+void print_all(t_map *map);
+//---------------------------------------------
 
 #endif

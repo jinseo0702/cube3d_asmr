@@ -5,6 +5,7 @@ void init_t_map(t_map *map_data)
     map_data->fd = 0;
     map_data->high = 0;
     map_data->width = 0;
+    map_data->m_high = 0;
     map_data->NO = NULL;
     map_data->SO = NULL;
     map_data->WE = NULL;
@@ -32,6 +33,8 @@ int map_parsing(char *map)
     if (check_size(&map_data) == 0)
         return (0);
     printf("hight = %d, width = %d\n", map_data.high, map_data.width);
+    insert_data(&map_data, map);
+    print_all(&map_data);
     return (1);
 }
 

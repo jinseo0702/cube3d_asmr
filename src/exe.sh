@@ -1,1 +1,1 @@
-clang parsing.c ../libft/libft.a -g
+clang parsing_2.c parsing.c ../libft/libft.a -g
