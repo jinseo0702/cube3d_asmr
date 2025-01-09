@@ -1,4 +1,4 @@
-#include "../include/cub3d.h"
+#include "cub3d.h"
 
 // 생각해보아야할 것
 //기본적으로 argv에 .cub파일만 받아오는지
@@ -48,7 +48,7 @@ int     main(int argc, char **argv)
 	}
     close(fd);
     */
-   //여기서 파싱을 하면 될 것 같습니다.
+   	parsing_map(argv);
     data.mlx = mlx_init();
     init_cub3d_program(&data);    //데이타를 초기화 합니다
     mlx_get_screen_size(data.mlx, &data.width, &data.height);

@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 17:15:04 by jinseo            #+#    #+#             */
-/*   Updated: 2024/03/29 15:01:18 by jinseo           ###   ########.fr       */
+/*   Created: 2024/02/27 14:25:11 by jinseo            #+#    #+#             */
+/*   Updated: 2024/03/03 11:33:14 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+int	ft_isinstr(int c, const char *str)
 {
-	void	*reptr;
-	size_t	cmp;
+	unsigned char	as;
 
-	cmp = nmemb * size;
-	if (!cmp && cmp / nmemb != size)
-		return (NULL);
-	reptr = (void *)malloc(size * nmemb);
-	if (!reptr)
-		return (NULL);
-	ft_memset(reptr, 0, size);
-	return (reptr);
+	as = (unsigned char)c;
+	while (*str)
+    {
+        if (c == *str)
+            return (1);
+        str++;
+    }
+	return (0);
 }

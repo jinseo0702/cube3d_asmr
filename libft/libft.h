@@ -6,7 +6,7 @@
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 22:52:07 by jinseo            #+#    #+#             */
-/*   Updated: 2024/12/01 10:04:45 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/01/07 17:18:26 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ double		ft_atof(char *nptr);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
+int			ft_strrstr(const char *s1, const char *s2, int len);
 int			ft_isascii(int c);
 int			ft_isprint(int c);
+int			ft_isinstr(int c, const char *str);
 int			ft_toupper(int c);
 int			ft_tolower(int c);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -50,6 +52,7 @@ char		*ft_strchr(const char *s, int c);
 char		*ft_strrchr(const char *s, int c);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 char		*ft_strdup(const char *s);
+char		*ft_strdup_flag(const char *s, int *status);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_strtrim(char const *s1, char const *set);

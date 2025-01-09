@@ -1,28 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 17:15:04 by jinseo            #+#    #+#             */
-/*   Updated: 2024/03/29 15:01:18 by jinseo           ###   ########.fr       */
+/*   Created: 2024/02/29 18:13:57 by jinseo            #+#    #+#             */
+/*   Updated: 2024/02/29 18:16:05 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+char	*ft_strdup_flag(const char *s, int *status)
 {
-	void	*reptr;
-	size_t	cmp;
+	char	*dest;
+	int		i;
 
-	cmp = nmemb * size;
-	if (!cmp && cmp / nmemb != size)
+	dest = (char *)malloc((sizeof(char) * ft_strlen(s)) + 1);
+	i = 0;
+	if (dest == NULL)
+	{
+		*status = -1;
 		return (NULL);
-	reptr = (void *)malloc(size * nmemb);
-	if (!reptr)
-		return (NULL);
-	ft_memset(reptr, 0, size);
-	return (reptr);
+	}
+	while (*(s + i) != '\0')
+	{
+		*(dest + i) = *(s + i);
+		i++;
+	}
+	*(dest + i) = '\0';
+	return (dest);
 }

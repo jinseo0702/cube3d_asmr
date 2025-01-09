@@ -6,6 +6,7 @@ RM = rm -rf
 SRCS = ft_isalnum.c \
 	ft_isalpha.c \
 	ft_isascii.c \
+	ft_isinstr.c \
 	ft_atoi.c \
 	ft_atoi_longlong.c \
 	ft_atof.c \
@@ -28,6 +29,7 @@ SRCS = ft_isalnum.c \
 	ft_toupper.c \
 	ft_calloc.c \
 	ft_strdup.c \
+	ft_strdup_flag.c \
 	ft_substr.c \
 	ft_strjoin.c \
 	ft_strtrim.c \
@@ -45,6 +47,7 @@ SRCS = ft_isalnum.c \
 	ft_freenull.c \
 	ft_free_two.c \
 	ft_strchr_len.c \
+	ft_strrstr.c \
 	gnl_check_bonus/get_next_line.c \
 	gnl_check_bonus/get_next_line_utils.c \
 	gnl_check_bonus/get_next_line_bonus.c \
