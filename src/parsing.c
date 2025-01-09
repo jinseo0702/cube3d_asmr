@@ -4,8 +4,8 @@ void init_t_map(t_map *map_data)
 {
     map_data->fd = 0;
     map_data->high = 0;
-    map_data->width = 0;
-    map_data->m_high = 0;
+    map_data->map_height = 0;
+    map_data->map_width = 0;
     map_data->NO = NULL;
     map_data->SO = NULL;
     map_data->WE = NULL;
@@ -15,26 +15,24 @@ void init_t_map(t_map *map_data)
     map_data->map = NULL;
 }
 
-int map_parsing(char *map)
+int map_parsing(char *map, t_data *data)
 {
-    t_map map_data;
-
+    init_t_map(&data->map);
     if (ft_strrstr(map, ".cub", 4) == 0)
     {
         //error 함수 만들기
         return (0);
     }
-    map_data.fd = open(map, O_RDONLY);
-    if (map_data.fd < 0)
+    data->map.fd = open(map, O_RDONLY);
+    if (data->map.fd < 0)
     {
         //error 함수 만들기
         return (0);
     }
-    if (check_size(&map_data) == 0)
+    if (check_size(&data->map) == 0)
         return (0);
-    printf("hight = %d, width = %d\n", map_data.high, map_data.width);
-    insert_data(&map_data, map);
-    print_all(&map_data);
+    // printf("hight = %d, width = %d\n", .high, map_data.map_width);
+    insert_data(&data->map, map);
     return (1);
 }
 
@@ -65,9 +63,9 @@ int check_size(t_map *map_data)
 	while ((temp = get_next_line(map_data->fd)))
 	{
 		if (map_data->high == 0)
-            map_data->width = ft_strlen(temp);
-        if (ft_strlen(temp) > map_data->width)
-            map_data->width = ft_strlen(temp);
+            map_data->map_width = ft_strlen(temp);
+        if (ft_strlen(temp) > map_data->map_width)
+            map_data->map_width = ft_strlen(temp);
         check |= check_arg(temp);
         if (check_arg(temp))
             cnt++;
@@ -77,8 +75,8 @@ int check_size(t_map *map_data)
 	close(map_data->fd);
     return (check == 63 && cnt == 6);
 }
-int main(int argc, char **argv)
-{
-    map_parsing(argv[1]);
-    return (0);
-}
+// int main(int argc, char **argv)
+// {
+//     map_parsing(argv[1]);
+//     return (0);
+// }

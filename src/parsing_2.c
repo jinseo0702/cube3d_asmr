@@ -39,8 +39,8 @@ int is_right_map(char *str, t_map *map_data)
         if (ft_isinstr(str[idx], "01NSWE ") == 0)
             return (-1); // error처리하기 맵에이상한 숫자가 껴있는경우
     }
-    map_data->map[map_data->m_high] = ft_strdup_flag(str, &status);
-    map_data->m_high++;
+    map_data->map[map_data->map_height] = ft_strdup_flag(str, &status);
+    map_data->map_height++;
     if(status == -1)
         return (-1); // error 처리하기
     return (1);
@@ -70,7 +70,7 @@ int insert_data(t_map *map_data, char *map)
 
 void print_all(t_map *map)
 {
-    printf("fd == %d, high == %d, width == %d, m_high == %d \n", map->fd, map->high, map->width, map->m_high);
+    printf("fd == %d, high == %d, width == %d, m_high == %d \n", map->fd, map->high, map->high, map->map_height);
     printf("NO is %s ", map->NO);
     printf("SO is %s ", map->SO);
     printf("WE is %s ", map->WE);

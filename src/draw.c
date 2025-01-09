@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../include/cub3d.h"
 
-void put_pixel_to_image(t_img *img, int x, int y, int color)
+void put_pixel_to_image(t_allimg *img, int x, int y, int color)
 {
     char *dst;
 
@@ -73,6 +73,7 @@ void draw_map_from_array(t_data *data)
     int x;
 
     y = 0;
+    // print_all(&data->map);
     while (y < data->map.map_height)
     {
         x = 0;
@@ -80,15 +81,15 @@ void draw_map_from_array(t_data *data)
 	{
             if (x + 1 < data->map.map_width)
 	    {
-                t_two_coordi_node p1 = {x, y, data->map.map[y][x]};
-                t_two_coordi_node p2 = {x + 1, y, data->map.map[y][x + 1]};
-                draw_line(p1, p2, data, p1.color);
+                t_two_coordi_node p1 = {x, y, 0xffa500};
+                t_two_coordi_node p2 = {x + 1, y, 0xffa500};
+                draw_line(p1, p2, data, 0xffa500);
             }
             if (y + 1 < data->map.map_height)
 	    {
-                t_two_coordi_node p1 = {x, y, data->map.map[y][x]};
-                t_two_coordi_node p2 = {x, y + 1, data->map.map[y + 1][x]};
-                draw_line(p1, p2, data, p1.color);
+                t_two_coordi_node p1 = {x, y, 0xffa500};
+                t_two_coordi_node p2 = {x, y + 1, 0xffa500};
+                draw_line(p1, p2, data, 0xffa500);
             }
             x++;
         }

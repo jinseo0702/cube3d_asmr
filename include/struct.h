@@ -12,21 +12,29 @@ typedef struct s_allimg
     int						endian;     //mlx_new_image 이 함수 쓸 때, 사용할 엔디안 값
 }			t_allimg;
 
-typedef struct  s_data 
+typedef struct s_two_coordi_node
 {
-    void    *mlx;       //mlx 함수를 쓰기위한 값
-    void    *win;       //mlx win 함수를 쓰기위한 void 값
-    int						width;      //화면 자체의 길이
-	int						height;     //화면 자체의 높이
-    t_allimg   img;            //이미지를 넣을 때 필요한 구조체
-}   t_data;
+    int x;
+    int y;
+    int color;
+}               t_two_coordi_node;
+
+typedef struct s_draw_func
+{
+    int dx;
+    int dy;
+    int sx;
+    int sy;
+    int err;
+    int e2;
+}               t_draw_func;
 
 typedef struct s_map
 {
     int fd;
     int high;
-    int width;
-    int m_high;//이 아래에 status를 넣을지 말지 고민중 입니다.
+    int map_width;
+    int map_height;//이 아래에 status를 넣을지 말지 고민중 입니다.
     char *NO;
     char *SO;
     char *WE;
@@ -36,5 +44,16 @@ typedef struct s_map
     char **map;
 }   t_map;
 
+typedef struct  s_data 
+{
+    void    *mlx;       //mlx 함수를 쓰기위한 값
+    void    *win;       //mlx win 함수를 쓰기위한 void 값
+    int						width;      //화면 자체의 길이
+	int						height;     //화면 자체의 높이
+    int     x_offset;
+    int     y_offset;
+    t_map   map;
+    t_allimg   img;            //이미지를 넣을 때 필요한 구조체
+}               t_data;
 
 #endif
