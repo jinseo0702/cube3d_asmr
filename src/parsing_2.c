@@ -70,14 +70,14 @@ int insert_data(t_map *map_data, char *map)
 
 void print_all(t_map *map)
 {
-    printf("fd == %d, high == %d, width == %d, m_high == %d \n", map->fd, map->high, map->high, map->map_height);
-    printf("NO is %s ", map->NO);
-    printf("SO is %s ", map->SO);
-    printf("WE is %s ", map->WE);
-    printf("EA is %s ", map->EA);
-    printf("F is %s ", map->F);
-    printf("C is %s ", map->C);
-    printf("print map\n");
+    //printf("fd == %d, high == %d, width == %d, m_high == %d \n", map->fd, map->high, map->map_width, map->map_height);
+    //printf("NO is %s ", map->NO);
+    //printf("SO is %s ", map->SO);
+    //printf("WE is %s ", map->WE);
+    //printf("EA is %s ", map->EA);
+    //printf("F is %s ", map->F);
+    //printf("C is %s ", map->C);
+    //printf("print map\n");
     int idx = 0;
     while (map->map[idx])
     {
