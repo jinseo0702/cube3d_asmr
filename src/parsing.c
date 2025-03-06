@@ -4,7 +4,7 @@ void init_t_map(t_map *map_data)
 {
     map_data->fd = 0;
     map_data->high = 0;
-    map_data->map_height = 0;
+    map_data->map_height = 1;
     map_data->map_width = 0;
     map_data->NO = NULL;
     map_data->SO = NULL;
