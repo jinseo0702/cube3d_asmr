@@ -1,18 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   draw.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hyunahn <hyunahn@student.42gyeongsan.      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/07 22:49:03 by hyunahn           #+#    #+#             */
-/*   Updated: 2025/01/07 22:53:01 by hyunahn          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../include/cub3d.h"
+#define SCALE 30;
 
-#include "cub3d.h"
-
-void put_pixel_to_image(t_img *img, int x, int y, int color)
+void put_pixel_to_image(t_allimg *img, int x, int y, int color)
 {
     char *dst;
 
@@ -55,44 +44,91 @@ void draw_line(t_two_coordi_node p1, t_two_coordi_node p2, t_data *data, int col
             break;
         draw.e2 = draw.err * 2;
         if (draw.e2 > -draw.dy)
-	{
+	    {
             draw.err -= draw.dy;
             p1.x += draw.sx;
         }
         if (draw.e2 < draw.dx)
-	{
+	    {
             draw.err += draw.dx;
             p1.y += draw.sy;
         }
     }
 }
-
+/*
 void draw_map_from_array(t_data *data)
 {
-    int	y;
     int x;
+    int y;
+    t_two_coordi_node p1;
+    t_two_coordi_node p2;
 
     y = 0;
     while (y < data->map.map_height)
     {
         x = 0;
         while (x < data->map.map_width)
-	{
+        {
+            p1.x = x * SCALE;
+            p1.y = y * SCALE;
             if (x + 1 < data->map.map_width)
-	    {
-                t_two_coordi_node p1 = {x, y, data->map.map[y][x]};
-                t_two_coordi_node p2 = {x + 1, y, data->map.map[y][x + 1]};
-                draw_line(p1, p2, data, p1.color);
+            {
+                p2.x = (x + 1) * SCALE;
+                p2.y = y * SCALE;
+                draw_line(p1, p2, data, 0xFFFFFF);
             }
+
             if (y + 1 < data->map.map_height)
-	    {
-                t_two_coordi_node p1 = {x, y, data->map.map[y][x]};
-                t_two_coordi_node p2 = {x, y + 1, data->map.map[y + 1][x]};
-                draw_line(p1, p2, data, p1.color);
+            {
+                p2.x = x * SCALE;
+                p2.y = (y + 1) * SCALE;
+                draw_line(p1, p2, data, 0xFFFFFF);
             }
             x++;
         }
         y++;
     }
 }
+*/                //이 주석 함수들은 그냥 모든 맵의 띄워쓰기 숫자 다 미포함하고 공간구현입니다
+int is_valid_map_char(char c)
+{
+    return (c == '1' || c == '0' || c == 'N' || c == 'E' || c == 'S' || c == 'W');
+}
 
+void draw_map_from_array(t_data *data)
+{
+    int x, y;
+    t_two_coordi_node p1, p2;
+
+    y = 0;
+    while (y < data->map.map_height)
+    {
+        x = 0;
+        while (x < data->map.map_width)
+        {
+            if (is_valid_map_char(data->map.map[y][x]))
+            {
+                p1.x = x * SCALE;
+                p1.y = y * SCALE;
+
+                // 오른쪽으로 선 그리는겁니다
+                if (x + 1 < data->map.map_width && is_valid_map_char(data->map.map[y][x + 1]))
+                {
+                    p2.x = (x + 1) * SCALE;
+                    p2.y = y * SCALE;
+                    draw_line(p1, p2, data, 0xFFFFFF);
+                }
+
+                // 아래로 선 그리는겁니다
+                if (y + 1 < data->map.map_height && is_valid_map_char(data->map.map[y + 1][x]))
+                {
+                    p2.x = x * SCALE;
+                    p2.y = (y + 1) * SCALE;
+                    draw_line(p1, p2, data, 0xFFFFFF);
+                }
+            }
+            x++;
+        }
+        y++;
+    }
+}       //현재 이 함수는 오류가 있습니다. 비슷하게 나오는데 2칸씩 잡아먹을때도 있고, 이상하게 선이 그여지기도 하는데 아직 이유를 모르겠습니다.

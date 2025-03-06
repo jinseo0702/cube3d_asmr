@@ -15,7 +15,10 @@ CC = cc
 CFLAGS = -g
 RM = rm -rf
 
-SRC = src/main.c
+SRC = src/main.c \
+src/draw.c \
+src/parsing.c \
+src/parsing_2.c \
 
 MLX = ./minilibx-linux
 
@@ -27,7 +30,7 @@ all : $(NAME)
 $(NAME): $(OBJS)
 	@make -C minilibx-linux/
 	@make -C libft/
-	@$(CC) $(OBJS) -Lmlx_linux -lmlx_Linux -L$(MLX) -lXext -lX11 -lm -lz -L libft/ -lft -o $(NAME)
+	@$(CC) $(OBJS) -no-pie -Lmlx_linux -lmlx_Linux -L$(MLX) -lXext -lX11 -lm -lz -L libft/ -lft -o $(NAME)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -I$(MLX) -Imlx_linux -O3 -c $< -o $@
