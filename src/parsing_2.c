@@ -41,14 +41,14 @@ int is_right_map(char *str, t_map *map_data)
     }
     // map_data->map[map_data->map_height] = ft_strdup_flag(str, &status);
     map_data->map[map_data->map_height] = ft_calloc(1, map_data->map_width);
-    ft_memset(map_data->map[map_data->map_height], '1', map_data->map_width);
+    ft_memset(map_data->map[map_data->map_height], 'X', map_data->map_width);
     ft_strlcpy(&map_data->map[map_data->map_height][1], str, ft_strlen(str));
     idx = -1;
     while (map_data->map[map_data->map_height][++idx])
         if(ft_isspace(map_data->map[map_data->map_height][idx]))
-            map_data->map[map_data->map_height][idx] = '1';
+            map_data->map[map_data->map_height][idx] = 'X';
     if (ft_strlen(str) < map_data->map_width)
-        map_data->map[map_data->map_height][ft_strlen(str)] = '1';
+        map_data->map[map_data->map_height][ft_strlen(str)] = 'X';
     map_data->map_height++;
     if(status == -1)
         return (-1); // error 처리하기
