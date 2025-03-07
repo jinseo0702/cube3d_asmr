@@ -12,6 +12,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <stdio.h>//나중에 지워야함
 
 int map_parsing(char *map, t_data *data);
 void init_t_map(t_map *map_data);
@@ -36,6 +37,14 @@ void init_draw_info(t_draw_func *draw, t_two_coordi_node p1, t_two_coordi_node p
 void draw_map_from_array(t_data *data);
 void    init_p(t_two_coordi_node p, int x, int y, int color);
 //---------------------------------------------
+
+
+
+//---------------------------------------------
+//flood fill algorithm
+void solve_Dfs(char **map, int x, int y, int *status);
+int flud_fill(char **map);
+
 
 #endif
 

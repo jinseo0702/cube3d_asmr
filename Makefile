@@ -19,6 +19,7 @@ SRC = src/main.c \
 src/draw.c \
 src/parsing.c \
 src/parsing_2.c \
+src/flood_fill.c \
 
 MLX = ./minilibx-linux
 

@@ -23,6 +23,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	reptr = (void *)malloc(size * nmemb);
 	if (!reptr)
 		return (NULL);
-	ft_memset(reptr, 0, size);
+	ft_memset(reptr, 0, size * nmemb);
 	return (reptr);
 }
