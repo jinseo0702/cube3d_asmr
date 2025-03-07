@@ -35,6 +35,7 @@ typedef struct s_map
     int high;
     int map_width;
     int map_height;//이 아래에 status를 넣을지 말지 고민중 입니다.
+    int exf;//exception_falg;
     char *NO;
     char *SO;
     char *WE;

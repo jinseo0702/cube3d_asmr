@@ -6,6 +6,7 @@ void init_t_map(t_map *map_data)
     map_data->high = 0;
     map_data->map_height = 1;
     map_data->map_width = 0;
+    map_data->exf = 0;
     map_data->NO = NULL;
     map_data->SO = NULL;
     map_data->WE = NULL;
@@ -38,6 +39,8 @@ int map_parsing(char *map, t_data *data)
 
 int check_arg(char *str)
 {
+    int idx;
+
     if (ft_strncmp(str, "NO ", 3) == 0)
         return (1);
     else if (ft_strncmp(str, "SO ", 3) == 0)
@@ -51,29 +54,39 @@ int check_arg(char *str)
     else if (ft_strncmp(str, "C ", 2) == 0)
         return (32);
     else
-        return (0);
+    {
+        idx = -1;
+        while (str[++idx])
+            if (!ft_isspace(str[idx]))
+                return (0);
+        return (64);
+    }
 }
 
 int check_size(t_map *map_data)
 {
-    static int check;
-    static int cnt;
+    // static int check;
+    int cnt;
 	char *temp;
 
+    cnt = 6;
 	while ((temp = get_next_line(map_data->fd)))
 	{
 		if (map_data->high == 0)
             map_data->map_width = ft_strlen(temp);
         if (ft_strlen(temp) > map_data->map_width)
             map_data->map_width = ft_strlen(temp);
-        check |= check_arg(temp);
-        if (check_arg(temp))
-            cnt++;
+        map_data->exf |= check_arg(temp);
+        if (check_arg(temp) && check_arg(temp) != 64)
+            map_data->exf |= (1 << (++cnt));
+        if (map_data->exf < 8191 && (check_arg(temp) == 0))
+            printf("error \n");//status로 바꾸장
 		ft_freenull(&temp);
 		map_data->high++;
 	}
 	close(map_data->fd);
-    return (check == 63 && cnt == 6);
+    printf("%d\n", map_data->exf);
+    return (map_data->exf == 8191);
 }
 // int main(int argc, char **argv)
 // {
