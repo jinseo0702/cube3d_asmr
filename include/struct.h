@@ -17,6 +17,7 @@ typedef struct s_two_coordi_node
     int x;
     int y;
     int color;
+    char c;
 }               t_two_coordi_node;
 
 typedef struct s_draw_func
@@ -55,6 +56,7 @@ typedef struct  s_data
     int     y_offset;
     t_map   map;
     t_allimg   img;            //이미지를 넣을 때 필요한 구조체
+    t_two_coordi_node cor;//초기화 함수 없음
 }               t_data;
 
 #endif

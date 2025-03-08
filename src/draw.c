@@ -45,7 +45,7 @@ void draw_map_from_array(t_data *data)
 
 void draw_square_to_image(t_data *data, int x, int y, int color) // 이 코드의 경우에는 이미지 버퍼에 픽셀들을 찍고 한번에 이미지를 찍어내는 코드입니다.
 {
-    int i
+    int i;
     int j;
     int pixel_x = x * TILE_SIZE;
     int pixel_y = y * TILE_SIZE;
@@ -63,10 +63,11 @@ void draw_square_to_image(t_data *data, int x, int y, int color) // 이 코드�
 
 void draw_map_from_array(t_data *data)
 {
-    int x
+    int x;
     int y;
     int color;
 
+    mlx_clear_window(data->mlx, data->win);
     for (y = 0; y < data->map.map_height; y++)
     {
         for (x = 0; x < data->map.map_width; x++)

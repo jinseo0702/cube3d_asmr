@@ -88,7 +88,7 @@ int insert_data(t_map *map_data, char *map)
     map_data->map[map_data->map_height] = ft_calloc(sizeof(char), map_data->map_width + 2);
     ft_memset(map_data->map[map_data->map_height], 'X', map_data->map_width + 1);
     flud_fill(map_data->map);
-    print_all(map_data);
+    // print_all(map_data);
 	close(map_data->fd);
     return (1);
 }

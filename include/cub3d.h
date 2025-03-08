@@ -14,6 +14,20 @@
 # include <stdio.h>
 # include <stdio.h>//나중에 지워야함
 
+//---------------------------------------------
+#	define KEY_UP	65362
+#	define KEY_DOWN	65364
+#	define KEY_LEFT	65361
+#	define KEY_RIGHT	65363
+#	define KEY_W	119
+#	define KEY_S	115
+#	define KEY_A	97
+#	define KEY_D	100
+#	define KEY_ESCAPE	65307
+//---------------------------------------------
+
+
+
 int map_parsing(char *map, t_data *data);
 void init_t_map(t_map *map_data);
 int check_size(t_map *map_data);
@@ -36,6 +50,7 @@ void put_pixel_to_image(t_allimg *img, int x, int y, int color);
 void init_draw_info(t_draw_func *draw, t_two_coordi_node p1, t_two_coordi_node p2);
 void draw_map_from_array(t_data *data);
 void    init_p(t_two_coordi_node p, int x, int y, int color);
+void find_obj(t_data *data);
 //---------------------------------------------
 
 
