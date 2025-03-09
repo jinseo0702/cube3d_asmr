@@ -80,7 +80,7 @@ void	init_cub3d_program(t_data *data)
 	data->x_offset = 500;
 	data->y_offset = 500;
 	data->ray_len = 10.0;
-	data->ray_count = 60;
+	data->ray_count = 120;
 	data->fov = M_PI / 3;
 }
 
@@ -161,23 +161,63 @@ t_ray cast_single_ray(t_data *game, double angle)
         }
         
         // 현재 위치에 벽이 있는지 확인
-        if (game->map.map[ray.map_y][ray.map_x] == '1')
-            ray.hit = 1;
+// 현재 위치에 벽이 있는지 확인
+		if (ray.map_y < 0 || ray.map_y >= game->map.map_height || 
+    		ray.map_x < 0 || ray.map_x >= game->map.map_width || 
+    		game->map.map[ray.map_y][ray.map_x] == '1' || 
+    		game->map.map[ray.map_y][ray.map_x] == 'X')
+		{
+    		ray.hit = 1;
+		}
+		
     }
     
     // 벽까지의 수직 거리 계산
-    if (ray.side == 0)
-        ray.perp_wall_dist = (ray.map_x - game->cor.x + 
-                             (1 - ray.step_x) / 2) / ray.dir_x;
-    else
-        ray.perp_wall_dist = (ray.map_y - game->cor.y + 
-                             (1 - ray.step_y) / 2) / ray.dir_y;
+	if (ray.side == 0)
+    ray.perp_wall_dist = fabs((ray.map_x - game->cor.x + 
+                         (1 - ray.step_x) / 2) / ray.dir_x);
+	else
+    ray.perp_wall_dist = fabs((ray.map_y - game->cor.y + 
+                         (1 - ray.step_y) / 2) / ray.dir_y);
     
     // 여기서 필요에 따라 더 많은 정보를 계산할 수 있어
     // 예: 벽의 텍스처 좌표, 정확한 충돌 지점 등
     
     return ray;
 }
+
+// void draw_ray(t_data *data, double start_x, double start_y, double ray_angle)
+// {
+//     double ray_x = start_x;
+//     double ray_y = start_y;
+//     double delta_x = cos(ray_angle);
+//     double delta_y = sin(ray_angle);
+//     int map_x, map_y;
+//     for (int i = 0; i < MAX_DEPTH; i++)  // 레이를 최대 탐색 거리까지 쏜다
+//     {
+//         ray_x += delta_x * 1;  // 1 픽셀씩 전진
+//         ray_y += delta_y * 1;
+//         map_x = (int)(ray_x / TILE_SIZE);
+//         map_y = (int)(ray_y / TILE_SIZE);
+//         // 벽(1)에 충돌하면 중단
+//         if (data->map.map[map_y][map_x] == '1')
+//             break;
+//         // 레이의 진행 방향을 시각적으로 표현 (디버깅용)
+//         mlx_pixel_put(data->mlx, data->win, (int)ray_x, (int)ray_y, 0xFF0000);
+//     }
+// }
+// void draw_rays(t_data *data)
+// {
+// 	double player_dir = -M_PI / 2; // 북쪽 방향으로 설정
+//     double player_x = data->cor.x * TILE_SIZE + TILE_SIZE / 2;
+//     double player_y = data->cor.y * TILE_SIZE + TILE_SIZE / 2;
+//     double angle = player_dir - (FOV / 2) * (M_PI / 180); // 시야각 시작점
+//     for (int i = 0; i < NUM_RAYS; i++)
+//     {
+//         draw_ray(data, player_x, player_y, angle);
+//         angle += (FOV / NUM_RAYS) * (M_PI / 180); // 각도 조정
+//     }
+// }
 
 int     main(int argc, char **argv)
 {
@@ -201,3 +241,4 @@ int     main(int argc, char **argv)
     // print_all(&(data.map));
     mlx_loop (data.mlx);
 }
+

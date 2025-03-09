@@ -1,54 +1,55 @@
 #include "../include/cub3d.h"
-/*
-#define TILE_SIZE 32  // 하나의 타일 크기
 
-void draw_square(t_data *data, int x, int y, int color) // 점을 하나씩 찍어서 사각형의 공간을 만들어내는 코드 입니다
-{
-    int i, j;
-    int pixel_x = x * TILE_SIZE;
-    int pixel_y = y * TILE_SIZE;
 
-    for (i = 0; i < TILE_SIZE; i++)
-    {
-        for (j = 0; j < TILE_SIZE; j++)
-        {
-            mlx_pixel_put(data->mlx, data->win, pixel_x + j, pixel_y + i, color);
-        }
-    }
-}
+// void draw_square(t_data *data, int x, int y, int color) // 점을 하나씩 찍어서 사각형의 공간을 만들어내는 코드 입니다
+// {
+//     int i, j;
+//     int pixel_x = x * TILE_SIZE;
+//     int pixel_y = y * TILE_SIZE;
 
-void draw_map_from_array(t_data *data)
-{
-    int x, y;
-    int color;
+//     for (i = 0; i < TILE_SIZE; i++)
+//     {
+//         for (j = 0; j < TILE_SIZE; j++)
+//         {
+//             mlx_pixel_put(data->mlx, data->win, pixel_x + j, pixel_y + i, color);
+//         }
+//     }
+// }
 
-    for (y = 0; y < data->map.map_height; y++)
-    {
-        for (x = 0; x < data->map.map_width; x++)
-        {
-            if (data->map.map[y][x] == '1')
-                color = 0xFFFFFF;  // 흰색 벽
-            else if (data->map.map[y][x] == '0')
-                color = 0x000000;  // 검은색 바닥
-            else if (ft_isinstr(data->map.map[y][x], "NSWE"))
-                color = 0xFF0000;  // 플레이어 위치는 빨간색
-            else
-                continue;
+// void draw_map_from_array(t_data *data)
+// {
+//     int x, y;
+//     int color;
 
-            draw_square(data, x, y, color);
-        }
-    }
-}
-*/
+//     mlx_clear_window(data->mlx, data->win);
+//     for (y = 0; y < data->map.map_height; y++)
+//     {
+//         for (x = 0; x < data->map.map_width; x++)
+//         {
+//             if (data->map.map[y][x] == '1')
+//                 color = 0xFFFFFF;  // 흰색 벽
+//             else if (data->map.map[y][x] == '0')
+//                 color = 0x000000;  // 검은색 바닥
+//             else if (ft_isinstr(data->map.map[y][x], "NSWE"))
+//                 color = 0xFF0000;  // 플레이어 위치는 빨간색
+//             else
+//                 continue;
 
-#define TILE_SIZE 32
+//             draw_square(data, x, y, color);
+//         }
+//     }
+//     draw_rays(data);
+//     mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+// }
+
+
 
 void draw_square_to_image(t_data *data, int x, int y, int color) // 이 코드의 경우에는 이미지 버퍼에 픽셀들을 찍고 한번에 이미지를 찍어내는 코드입니다.
 {
     int i;
     int j;
-    int pixel_x = x * TILE_SIZE;
-    int pixel_y = y * TILE_SIZE;
+    int pixel_x = x * TILE_SIZE + 16;
+    int pixel_y = y * TILE_SIZE + 16;
     char *dst;
 
     for (i = 0; i < TILE_SIZE; i++)
@@ -131,6 +132,7 @@ void draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int color)
     }
 }
 
+/*
 void draw_rays(t_data *data)
 {
     double ray_angle;
@@ -172,6 +174,43 @@ void draw_rays(t_data *data)
         draw_line_to_image(data, start_x, start_y, end_x, end_y, 0xFFFF33);
         
         // 다음 광선 각도
+        ray_angle += data->fov / data->ray_count;
+    }
+}
+*/
+
+void draw_rays(t_data *data)
+{
+    double ray_angle;
+    t_ray ray;
+    int start_x, start_y, end_x, end_y;
+    
+    // 시작점 (플레이어 위치)
+    start_x = (data->cor.x * TILE_SIZE + TILE_SIZE / 2);
+
+    start_y = (data->cor.y * TILE_SIZE + TILE_SIZE / 2);
+    // 플레이어 방향 (북쪽 기준)
+    double player_dir = -M_PI / 2;
+    
+    // 시야각의 왼쪽 끝부터 오른쪽 끝까지 여러 광선 쏘기
+    ray_angle = player_dir - (data->fov / 2);
+    for (int i = 0; i < data->ray_count; i++)
+    {
+        ray = cast_single_ray(data, ray_angle);
+        
+        // 여기가 핵심! 레이 길이를 적절히 조정해야 함
+        // TILE_SIZE는 너무 큰 값일 수 있음
+        double ray_length = ray.perp_wall_dist;
+        // 최대 길이 제한을 두는 것이 좋음
+        if (ray_length > data->map.map_width || ray_length > data->map.map_height)
+            ray_length = fmin(data->map.map_width, data->map.map_height);
+            
+        end_x = start_x + cos(ray_angle) * ray_length * TILE_SIZE;
+        end_y = start_y + sin(ray_angle) * ray_length * TILE_SIZE;
+        
+        // 광선 그리기
+        draw_line_to_image(data, start_x, start_y, end_x, end_y, 0xFFFF33);
+        
         ray_angle += data->fov / data->ray_count;
     }
 }

@@ -24,6 +24,11 @@
 #	define KEY_A	97
 #	define KEY_D	100
 #	define KEY_ESCAPE	65307
+
+#define TILE_SIZE 32
+#define FOV 60 // 플레이어의 시야각
+#define NUM_RAYS 120 // 시야각 내에서 몇 개의 레이를 쏠지 (화질에 영향)
+#define MAX_DEPTH 20 // 레이의 최대 탐색 거리
 //---------------------------------------------
 
 
@@ -61,8 +66,10 @@ void solve_Dfs(char **map, int x, int y, int *status);
 int flud_fill(char **map);
 
 t_ray cast_single_ray(t_data *game, double angle);
+void set_ray(t_data *data);
 void draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int color);
 void draw_rays(t_data *data);
+void draw_ray(t_data *data, double start_x, double start_y, double ray_angle);
 
 #endif
 
