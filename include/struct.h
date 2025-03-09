@@ -46,6 +46,29 @@ typedef struct s_map
     char **map;
 }   t_map;
 
+typedef struct s_ray
+{
+    double dir_x;        // 광선의 X 방향 (코사인 값)
+    double dir_y;        // 광선의 Y 방향 (사인 값)
+    
+    int map_x;           // 광선이 현재 지나가고 있는 맵의 X 좌표
+    int map_y;           // 광선이 현재 지나가고 있는 맵의 Y 좌표
+    
+    int step_x;          // X 방향으로 이동할 때 +1 또는 -1
+    int step_y;          // Y 방향으로 이동할 때 +1 또는 -1
+    
+    double side_dist_x;  // 현재 위치에서 다음 X 격자선까지의 거리
+    double side_dist_y;  // 현재 위치에서 다음 Y 격자선까지의 거리
+    
+    double delta_dist_x; // X 격자선 사이의 거리
+    double delta_dist_y; // Y 격자선 사이의 거리
+    
+    int hit;             // 벽에 부딪혔는지 여부 (0: 아니오, 1: 예)
+    int side;            // 부딪힌 벽이 어느 면인지 (0: X면, 1: Y면)
+    
+    double perp_wall_dist; // 벽까지의 수직 거리 (화면의 깊이를 계산할 때 사용)
+} t_ray;
+
 typedef struct  s_data 
 {
     void    *mlx;       //mlx 함수를 쓰기위한 값
@@ -54,9 +77,14 @@ typedef struct  s_data
 	int						height;     //화면 자체의 높이
     int     x_offset;
     int     y_offset;
+    double ray_angle;
+    double ray_len;
+    double fov;
+    int ray_count;
     t_map   map;
     t_allimg   img;            //이미지를 넣을 때 필요한 구조체
     t_two_coordi_node cor;//초기화 함수 없음
+    t_ray ray;
 }               t_data;
 
 #endif

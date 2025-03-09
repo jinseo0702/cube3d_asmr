@@ -15,27 +15,46 @@ int	ft_key_handling(int keycode, t_data *data)  //이건 esc 컨트롤
 	}
 	else if(keycode ==  KEY_UP || keycode == KEY_W)
 	{
-		data->map.map[data->cor.y][data->cor.x] = '2';
-		data->cor.y -= 1;
-		data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		if (data->map.map[data->cor.y - 1][data->cor.x] != '1' && data->map.map[data->cor.y - 1][data->cor.x] != 'X')
+		{
+			data->map.map[data->cor.y][data->cor.x] = '2';
+			data->cor.y -= 1;
+			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		}
+		draw_map_from_array(data);
 	}
 	else if(keycode ==  KEY_DOWN || keycode == KEY_S)
 	{
-		data->map.map[data->cor.y][data->cor.x] = '2';
-		data->cor.y += 1;
-		data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		if (data->map.map[data->cor.y + 1][data->cor.x] != '1' && data->map.map[data->cor.y + 1][data->cor.x] != 'X')
+		{
+			data->map.map[data->cor.y][data->cor.x] = '2';
+			data->cor.y += 1;
+			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		}
+
+		draw_map_from_array(data);
 	}
 	else if(keycode ==  KEY_LEFT || keycode == KEY_A)
 	{
-		data->map.map[data->cor.y][data->cor.x] = '2';
-		data->cor.x -= 1;
-		data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		if (data->map.map[data->cor.y][data->cor.x - 1] != '1' && data->map.map[data->cor.y][data->cor.x - 1] != 'X')
+		{
+			data->map.map[data->cor.y][data->cor.x] = '2';
+			data->cor.x -= 1;
+			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		}
+		
+		draw_map_from_array(data);
 	}
 	else if(keycode ==  KEY_RIGHT || keycode == KEY_D)
 	{
-		data->map.map[data->cor.y][data->cor.x] = '2';
-		data->cor.x += 1;
-		data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		if (data->map.map[data->cor.y][data->cor.x + 1] != '1' && data->map.map[data->cor.y][data->cor.x + 1] != 'X')
+		{
+			data->map.map[data->cor.y][data->cor.x] = '2';
+			data->cor.x += 1;
+			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
+		}
+		
+		draw_map_from_array(data);
 	}
 }
 
@@ -60,6 +79,9 @@ void	init_cub3d_program(t_data *data)
 	data->img.height = data->height;
 	data->x_offset = 500;
 	data->y_offset = 500;
+	data->ray_len = 10.0;
+	data->ray_count = 60;
+	data->fov = M_PI / 3;
 }
 
 void find_obj(t_data *data)
@@ -78,6 +100,83 @@ void find_obj(t_data *data)
 			}
 		}
 	}
+}
+
+
+t_ray cast_single_ray(t_data *game, double angle)
+{
+    t_ray ray;
+    
+    // 광선 방향 벡터 계산
+    ray.dir_x = cos(angle);
+    ray.dir_y = sin(angle);
+    
+    // 플레이어가 있는 맵 좌표 계산
+    ray.map_x = (int)game->cor.x;
+    ray.map_y = (int)game->cor.y;
+    
+    // 광선이 다음 x, y 격자선으로 이동하는 데 필요한 거리 계산
+    ray.delta_dist_x = (ray.dir_x == 0) ? 1e30 : fabs(1 / ray.dir_x);
+    ray.delta_dist_y = (ray.dir_y == 0) ? 1e30 : fabs(1 / ray.dir_y);
+    
+    // 광선이 나아갈 방향과 첫 번째 격자선까지의 거리 계산
+    if (ray.dir_x < 0)
+    {
+        ray.step_x = -1;
+        ray.side_dist_x = (game->cor.x - ray.map_x) * ray.delta_dist_x;
+    }
+    else
+    {
+        ray.step_x = 1;
+        ray.side_dist_x = (ray.map_x + 1.0 - game->cor.x) * ray.delta_dist_x;
+    }
+    
+    if (ray.dir_y < 0)
+    {
+        ray.step_y = -1;
+        ray.side_dist_y = (game->cor.y - ray.map_y) * ray.delta_dist_y;
+    }
+    else
+    {
+        ray.step_y = 1;
+        ray.side_dist_y = (ray.map_y + 1.0 - game->cor.y) * ray.delta_dist_y;
+    }
+    
+    // 벽을 찾을 때까지 광선을 칸 단위로 이동
+    ray.hit = 0;
+    while (ray.hit == 0)
+    {
+        // x, y 방향 중 더 가까운 격자선 선택
+        if (ray.side_dist_x < ray.side_dist_y)
+        {
+            ray.side_dist_x += ray.delta_dist_x;
+            ray.map_x += ray.step_x;
+            ray.side = 0;
+        }
+        else
+        {
+            ray.side_dist_y += ray.delta_dist_y;
+            ray.map_y += ray.step_y;
+            ray.side = 1;
+        }
+        
+        // 현재 위치에 벽이 있는지 확인
+        if (game->map.map[ray.map_y][ray.map_x] == '1')
+            ray.hit = 1;
+    }
+    
+    // 벽까지의 수직 거리 계산
+    if (ray.side == 0)
+        ray.perp_wall_dist = (ray.map_x - game->cor.x + 
+                             (1 - ray.step_x) / 2) / ray.dir_x;
+    else
+        ray.perp_wall_dist = (ray.map_y - game->cor.y + 
+                             (1 - ray.step_y) / 2) / ray.dir_y;
+    
+    // 여기서 필요에 따라 더 많은 정보를 계산할 수 있어
+    // 예: 벽의 텍스처 좌표, 정확한 충돌 지점 등
+    
+    return ray;
 }
 
 int     main(int argc, char **argv)

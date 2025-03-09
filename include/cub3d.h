@@ -60,6 +60,9 @@ void find_obj(t_data *data);
 void solve_Dfs(char **map, int x, int y, int *status);
 int flud_fill(char **map);
 
+t_ray cast_single_ray(t_data *game, double angle);
+void draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int color);
+void draw_rays(t_data *data);
 
 #endif
 
