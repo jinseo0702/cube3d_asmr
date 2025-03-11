@@ -20,6 +20,9 @@ src/draw.c \
 src/parsing.c \
 src/parsing_2.c \
 src/flood_fill.c \
+src/image.c \
+src/util.c \
+src/holly.c \
 
 MLX = ./minilibx-linux
 

@@ -23,6 +23,7 @@
 #	define KEY_S	115
 #	define KEY_A	97
 #	define KEY_D	100
+#	define KEY_M	109             // 뷰 모드 전환 키 (M)
 #	define KEY_ESCAPE	65307
 
 #define TILE_SIZE 32
@@ -44,6 +45,9 @@ int insert_data(t_map *map_data, char *map);
 
 //---------------------------------------------
 void print_all(t_map *map);
+int ft_arraylen(char **array);
+void ft_free_array(char **array);
+void load_textures(t_data *data);
 //---------------------------------------------
 
 //---------------------------------------------
@@ -59,7 +63,6 @@ void find_obj(t_data *data);
 //---------------------------------------------
 
 
-
 //---------------------------------------------
 //flood fill algorithm
 void solve_Dfs(char **map, int x, int y, int *status);
@@ -71,5 +74,11 @@ void draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int color)
 void draw_rays(t_data *data);
 void draw_ray(t_data *data, double start_x, double start_y, double ray_angle);
 
-#endif
+// 3D 렌더링 관련 함수들
+void draw_floor_ceiling(t_data *data);
+void draw_walls_3d(t_data *data);
+void render_3d(t_data *data);
+void init_player_direction(t_data *data);
+double get_wall_x(t_data *data, t_ray *ray);
 
+#endif

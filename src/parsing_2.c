@@ -3,25 +3,40 @@
 int parse_color(char *line)
 {
     int r, g, b;
-    char **colors;
+    char **parts;
+    char **rgb;
 
-    colors = ft_split(line, ',');
-    if (!colors || ft_arraylen(colors) != 3)
+    // "F 220,100,0" 형식에서 먼저 공백으로 분리
+    parts = ft_split(line, ' ');
+    if (!parts || ft_arraylen(parts) < 2) // "F"와 "220,100,0" 부분으로 나뉨
     {
-        ft_free_array(colors);
-        return (-1);
+        if (parts)
+            ft_free_array(parts);
+        return (0x000000); // 오류 시 기본 검은색
     }
 
-    r = ft_atoi(colors[0]);
-    g = ft_atoi(colors[1]);
-    b = ft_atoi(colors[2]);
+    // "220,100,0" 부분을 쉼표로 분리
+    rgb = ft_split(parts[1], ',');
+    ft_free_array(parts);
 
-    ft_free_array(colors);
+    if (!rgb || ft_arraylen(rgb) != 3) // r, g, b 값 확인
+    {
+        if (rgb)
+            ft_free_array(rgb);
+        return (0x000000);
+    }
+
+    r = ft_atoi(rgb[0]);
+    g = ft_atoi(rgb[1]);
+    b = ft_atoi(rgb[2]);
+
+    ft_free_array(rgb);
 
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
-        return (-1);
+        return (0x000000);
 
-    return (r << 16 | g << 8 | b); // 16진수 색상 값으로 변환 (0xRRGGBB)
+    // RGB 색상값 생성
+    return ((r << 16) | (g << 8) | b);
 }
 
 
@@ -125,8 +140,8 @@ void print_all(t_map *map)
     printf("SO is %s ", map->SO);
     printf("WE is %s ", map->WE);
     printf("EA is %s ", map->EA);
-    printf("F is %s ", map->F);
-    printf("C is %s ", map->C);
+    // printf("F is %s ", map->F);
+    // printf("C is %s ", map->C);
     printf("print map\n");
     int idx = 0;
     while (map->map[idx])

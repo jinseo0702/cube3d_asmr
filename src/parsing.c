@@ -11,8 +11,8 @@ void init_t_map(t_map *map_data)
     map_data->SO = NULL;
     map_data->WE = NULL;
     map_data->EA = NULL;
-    map_data->F = NULL;
-    map_data->C = NULL;
+    map_data->F = 0;
+    map_data->C = 0;
     map_data->map = NULL;
 }
 
@@ -88,8 +88,3 @@ int check_size(t_map *map_data)
     printf("%d\n", map_data->exf);
     return (map_data->exf == 8191);
 }
-// int main(int argc, char **argv)
-// {
-//     map_parsing(argv[1]);
-//     return (0);
-// }

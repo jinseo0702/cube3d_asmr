@@ -3,61 +3,6 @@
 // 생각해보아야할 것
 //기본적으로 argv에 .cub파일만 받아오는지
 
-int	ft_key_handling(int keycode, t_data *data)  //이건 esc 컨트롤
-{
-	if (keycode == KEY_ESCAPE)
-	{
-		mlx_destroy_image(data->mlx, data->img.img);
-		mlx_destroy_window(data->mlx, data->win);
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-		exit(0);
-	}
-	else if(keycode ==  KEY_UP || keycode == KEY_W)
-	{
-		if (data->map.map[data->cor.y - 1][data->cor.x] != '1' && data->map.map[data->cor.y - 1][data->cor.x] != 'X')
-		{
-			data->map.map[data->cor.y][data->cor.x] = '2';
-			data->cor.y -= 1;
-			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
-		}
-		draw_map_from_array(data);
-	}
-	else if(keycode ==  KEY_DOWN || keycode == KEY_S)
-	{
-		if (data->map.map[data->cor.y + 1][data->cor.x] != '1' && data->map.map[data->cor.y + 1][data->cor.x] != 'X')
-		{
-			data->map.map[data->cor.y][data->cor.x] = '2';
-			data->cor.y += 1;
-			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
-		}
-
-		draw_map_from_array(data);
-	}
-	else if(keycode ==  KEY_LEFT || keycode == KEY_A)
-	{
-		if (data->map.map[data->cor.y][data->cor.x - 1] != '1' && data->map.map[data->cor.y][data->cor.x - 1] != 'X')
-		{
-			data->map.map[data->cor.y][data->cor.x] = '2';
-			data->cor.x -= 1;
-			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
-		}
-		
-		draw_map_from_array(data);
-	}
-	else if(keycode ==  KEY_RIGHT || keycode == KEY_D)
-	{
-		if (data->map.map[data->cor.y][data->cor.x + 1] != '1' && data->map.map[data->cor.y][data->cor.x + 1] != 'X')
-		{
-			data->map.map[data->cor.y][data->cor.x] = '2';
-			data->cor.x += 1;
-			data->map.map[data->cor.y][data->cor.x] = data->cor.c;
-		}
-		
-		draw_map_from_array(data);
-	}
-}
-
 
 int	ft_exit_handling(void *param)   // 이건 크로스 표시 컨트롤
 {
@@ -160,86 +105,224 @@ t_ray cast_single_ray(t_data *game, double angle)
             ray.side = 1;
         }
         
+        // 맵 범위 체크 추가 - 중요한 안전장치!
+        if (ray.map_y < 0 || ray.map_y >= game->map.map_height || 
+            ray.map_x < 0 || ray.map_x >= game->map.map_width)
+        {
+            ray.hit = 1;
+            ray.perp_wall_dist = 20.0; // 맵 밖으로 나간 경우 큰 값 설정
+            break;
+        }
         // 현재 위치에 벽이 있는지 확인
-// 현재 위치에 벽이 있는지 확인
-		if (ray.map_y < 0 || ray.map_y >= game->map.map_height || 
-    		ray.map_x < 0 || ray.map_x >= game->map.map_width || 
-    		game->map.map[ray.map_y][ray.map_x] == '1' || 
-    		game->map.map[ray.map_y][ray.map_x] == 'X')
-		{
-    		ray.hit = 1;
-		}
-		
+        else if (game->map.map[ray.map_y][ray.map_x] == '1' || 
+                 game->map.map[ray.map_y][ray.map_x] == 'X')
+        {
+            ray.hit = 1;
+        }
     }
     
     // 벽까지의 수직 거리 계산
-	if (ray.side == 0)
-    ray.perp_wall_dist = fabs((ray.map_x - game->cor.x + 
-                         (1 - ray.step_x) / 2) / ray.dir_x);
-	else
-    ray.perp_wall_dist = fabs((ray.map_y - game->cor.y + 
-                         (1 - ray.step_y) / 2) / ray.dir_y);
-    
-    // 여기서 필요에 따라 더 많은 정보를 계산할 수 있어
-    // 예: 벽의 텍스처 좌표, 정확한 충돌 지점 등
+    if (ray.side == 0)
+        ray.perp_wall_dist = fabs((ray.map_x - game->cor.x + (1 - ray.step_x) / 2) / ray.dir_x);
+    else
+        ray.perp_wall_dist = fabs((ray.map_y - game->cor.y + (1 - ray.step_y) / 2) / ray.dir_y);
     
     return ray;
 }
 
-// void draw_ray(t_data *data, double start_x, double start_y, double ray_angle)
-// {
-//     double ray_x = start_x;
-//     double ray_y = start_y;
-//     double delta_x = cos(ray_angle);
-//     double delta_y = sin(ray_angle);
-//     int map_x, map_y;
-//     for (int i = 0; i < MAX_DEPTH; i++)  // 레이를 최대 탐색 거리까지 쏜다
-//     {
-//         ray_x += delta_x * 1;  // 1 픽셀씩 전진
-//         ray_y += delta_y * 1;
-//         map_x = (int)(ray_x / TILE_SIZE);
-//         map_y = (int)(ray_y / TILE_SIZE);
-//         // 벽(1)에 충돌하면 중단
-//         if (data->map.map[map_y][map_x] == '1')
-//             break;
-//         // 레이의 진행 방향을 시각적으로 표현 (디버깅용)
-//         mlx_pixel_put(data->mlx, data->win, (int)ray_x, (int)ray_y, 0xFF0000);
-//     }
-// }
-// void draw_rays(t_data *data)
-// {
-// 	double player_dir = -M_PI / 2; // 북쪽 방향으로 설정
-//     double player_x = data->cor.x * TILE_SIZE + TILE_SIZE / 2;
-//     double player_y = data->cor.y * TILE_SIZE + TILE_SIZE / 2;
-//     double angle = player_dir - (FOV / 2) * (M_PI / 180); // 시야각 시작점
-//     for (int i = 0; i < NUM_RAYS; i++)
-//     {
-//         draw_ray(data, player_x, player_y, angle);
-//         angle += (FOV / NUM_RAYS) * (M_PI / 180); // 각도 조정
-//     }
-// }
-
-int     main(int argc, char **argv)
+// 방향 초기화 함수 추가
+void init_player_direction(t_data *data)
 {
-    t_data  data;
-    int fd;
-
-   	map_parsing(argv[1], &data);
-    data.mlx = mlx_init();
-    init_cub3d_program(&data);    //데이타를 초기화 합니다
-	find_obj(&data);
-    mlx_get_screen_size(data.mlx, &data.width, &data.height);
-    data.win = mlx_new_window (data.mlx, data.width, data.height, "LOVE");
-    data.img.img = mlx_new_image(data.mlx, data.img.width, data.img.height);
-    data.img.buffer = mlx_get_data_addr(data.img.img, &data.img.pixel_bits,
-			&data.img.line_bytes, &data.img.endian);
-    //여기에 파싱한 맵 데이터를 이미지로 찍어내는 함수를 넣어야할 듯 합니다
-	load_textures(&data);	//여기에 그림 파일 텍스쳐를 로드 해둡니다. 2025.03.11
-	draw_map_from_array(&data);
-	// mlx_put_image_to_window(data.mlx, data.win, data.img.img, 0, 0);
-    mlx_key_hook(data.win, ft_key_handling, &data);
-    mlx_hook(data.win, 17, 0, ft_exit_handling, &data);
-    // print_all(&(data.map));
-    mlx_loop (data.mlx);
+    // 플레이어의 초기 방향 설정 (N,S,E,W)
+    if (data->cor.c == 'N')
+        data->cor.dir = -M_PI / 2;  // 북쪽은 -90도
+    else if (data->cor.c == 'S')
+        data->cor.dir = M_PI / 2;   // 남쪽은 90도
+    else if (data->cor.c == 'E')
+        data->cor.dir = 0;          // 동쪽은 0도
+    else if (data->cor.c == 'W')
+        data->cor.dir = M_PI;       // 서쪽은 180도
 }
 
+// 키 이벤트 처리 함수 수정: 3D 이동과 회전 추가
+int ft_key_handling(int keycode, t_data *data)
+{
+    // 화면 모드 전환 (M 키)
+    if (keycode == KEY_M)
+    {
+        data->view_mode = !data->view_mode;
+        if (data->view_mode)
+            render_3d(data);
+        else
+            draw_map_from_array(data);
+    }
+    // ESC 키 처리 (종료)
+    else if (keycode == KEY_ESCAPE)
+    {
+        mlx_destroy_image(data->mlx, data->img.img);
+        mlx_destroy_window(data->mlx, data->win);
+        mlx_destroy_display(data->mlx);
+        free(data->mlx);
+        exit(0);
+    }
+    // 전진 이동 (W 키 또는 위쪽 화살표)
+    else if(keycode == KEY_UP || keycode == KEY_W)
+    {
+        double new_x = data->cor.x + cos(data->cor.dir) * 0.1;
+        double new_y = data->cor.y + sin(data->cor.dir) * 0.1;
+        
+        if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+            data->map.map[(int)new_y][(int)new_x] != 'X')
+        {
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+            data->cor.x = new_x;
+            data->cor.y = new_y;
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+        }
+    }
+    // 후진 이동 (S 키 또는 아래쪽 화살표)
+    else if(keycode == KEY_DOWN || keycode == KEY_S)
+    {
+        double new_x = data->cor.x - cos(data->cor.dir) * 0.1;
+        double new_y = data->cor.y - sin(data->cor.dir) * 0.1;
+        
+        if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+            data->map.map[(int)new_y][(int)new_x] != 'X')
+        {
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+            data->cor.x = new_x;
+            data->cor.y = new_y;
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+        }
+    }
+    // 왼쪽으로 이동 (A 키)
+    else if(keycode == KEY_A)
+    {
+        double new_x = data->cor.x - cos(data->cor.dir + M_PI / 2) * 0.1;
+        double new_y = data->cor.y - sin(data->cor.dir + M_PI / 2) * 0.1;
+        
+        if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+            data->map.map[(int)new_y][(int)new_x] != 'X')
+        {
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+            data->cor.x = new_x;
+            data->cor.y = new_y;
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+        }
+    }
+    // 오른쪽으로 이동 (D 키)
+    else if(keycode == KEY_D)
+    {
+        double new_x = data->cor.x + cos(data->cor.dir + M_PI / 2) * 0.1;
+        double new_y = data->cor.y + sin(data->cor.dir + M_PI / 2) * 0.1;
+        
+        if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+            data->map.map[(int)new_y][(int)new_x] != 'X')
+        {
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+            data->cor.x = new_x;
+            data->cor.y = new_y;
+            data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+        }
+    }
+    // 왼쪽으로 회전 (왼쪽 화살표)
+    else if(keycode == KEY_LEFT)
+    {
+        data->cor.dir -= 0.1;
+        if (data->cor.dir < 0)
+            data->cor.dir += 2 * M_PI;
+    }
+    // 오른쪽으로 회전 (오른쪽 화살표)
+    else if(keycode == KEY_RIGHT)
+    {
+        data->cor.dir += 0.1;
+        if (data->cor.dir > 2 * M_PI)
+            data->cor.dir -= 2 * M_PI;
+    }
+
+    // 키 입력 후 화면 업데이트
+    if (data->view_mode)
+        render_3d(data);
+    else
+        draw_map_from_array(data);
+
+    return (0);
+}
+
+// main.c 메인 함수 수정
+// main.c 함수 수정
+
+int main(int argc, char **argv)
+{
+    t_data data;
+    int fd;
+
+    if (argc != 2)
+    {
+        printf("Error\n잘못된 인자 개수입니다. ./cub3D [맵파일.cub] 형식으로 실행하세요.\n");
+        return (1);
+    }
+
+    // 맵 파싱
+    if (!map_parsing(argv[1], &data))
+    {
+        printf("Error\n맵 파싱에 실패했습니다.\n");
+        return (1);
+    }
+
+    // MLX 초기화
+    data.mlx = mlx_init();
+    if (!data.mlx)
+    {
+        printf("Error\nMLX 초기화에 실패했습니다.\n");
+        return (1);
+    }
+
+    // 프로그램 데이터 초기화
+    init_cub3d_program(&data);
+    
+    // 플레이어 위치 찾기
+    find_obj(&data);
+    
+    // 플레이어 초기 방향 설정
+    init_player_direction(&data);
+    
+    // 화면 크기 가져오기 (여기서는 고정값을 사용)
+    // mlx_get_screen_size는 창을 만들기 전에 호출할 수 없음
+    data.width = 800;  // 적절한 해상도로 수정
+    data.height = 600;
+    
+    // 창 생성
+    data.win = mlx_new_window(data.mlx, data.width, data.height, "Cub3D");
+    if (!data.win)
+    {
+        printf("Error\n윈도우 생성에 실패했습니다.\n");
+        return (1);
+    }
+    
+    // 이미지 생성
+    data.img.img = mlx_new_image(data.mlx, data.width, data.height);
+    data.img.buffer = mlx_get_data_addr(data.img.img, &data.img.pixel_bits,
+            &data.img.line_bytes, &data.img.endian);
+    
+    // 텍스처 로드
+    load_textures(&data);
+    
+    // 기본 모드는 3D 맵 (수정 가능)
+    data.view_mode = 1;  // 1은 3D 모드, 0은 2D 모드
+    
+    // 이제 모든 초기화가 완료된 후에 3D 또는 2D 맵 표시
+    if (data.view_mode)
+        render_3d(&data);
+    else
+        draw_map_from_array(&data);
+    
+    // 키보드 및 창 종료 이벤트 설정
+    mlx_key_hook(data.win, ft_key_handling, &data);
+    mlx_hook(data.win, 17, 0, ft_exit_handling, &data);
+    
+    // MLX 루프 시작
+    mlx_loop(data.mlx);
+    
+    return (0);
+}

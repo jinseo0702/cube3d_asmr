@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../include/cub3d.h"
 
 // 이미지 파일 텍스처 저장 함수 2025.03.11
 
@@ -71,11 +71,11 @@ void draw_floor_and_ceiling(t_data *data)
 
 void load_textures(t_data *data)
 {
-    data->north = mlx_xpm_file_to_image(data->mlx, data->map.NO, &data->tex_width, &data->tex_height);
-    data->south = mlx_xpm_file_to_image(data->mlx, data->map.SO, &data->tex_width, &data->tex_height);
-    data->west = mlx_xpm_file_to_image(data->mlx, data->map.WE, &data->tex_width, &data->tex_height);
-    data->east = mlx_xpm_file_to_image(data->mlx, data->map.EA, &data->tex_width, &data->tex_height);
+    data->north = mlx_xpm_file_to_image(data->mlx, data->map.NO, &data->width, &data->height);
+    data->south = mlx_xpm_file_to_image(data->mlx, data->map.SO, &data->width, &data->height);
+    data->west = mlx_xpm_file_to_image(data->mlx, data->map.WE, &data->width, &data->height);
+    data->east = mlx_xpm_file_to_image(data->mlx, data->map.EA, &data->width, &data->height);
 
-    if (!data->north || !data->south || !data->west || !data->east)
-        handle_error("Error: Failed to load textures");
+    // if (!data->north || !data->south || !data->west || !data->east)
+    //     handle_error("Error: Failed to load textures");
 }

@@ -14,10 +14,11 @@ typedef struct s_allimg
 
 typedef struct s_two_coordi_node
 {
-    int x;
-    int y;
+    double x;      // 소수점 위치를 위해 double로 변경
+    double y;      // 소수점 위치를 위해 double로 변경
     int color;
     char c;
+    double dir;    // 플레이어 방향 (라디안) 추가
 }               t_two_coordi_node;
 
 typedef struct s_draw_func
@@ -41,8 +42,8 @@ typedef struct s_map
     char *SO;
     char *WE;
     char *EA;
-    char *F;
-    char *C;
+    int F;
+    int C;
     char **map;
 }   t_map;
 
@@ -81,6 +82,7 @@ typedef struct  s_data
     double ray_len;
     double fov;
     int ray_count;
+    int view_mode;      // 화면 모드 (0: 2D 맵, 1: 3D 뷰)
     t_map   map;
     t_allimg   img;            //이미지를 넣을 때 필요한 구조체
     t_two_coordi_node cor;//초기화 함수 없음
