@@ -1,5 +1,30 @@
 #include "../include/cub3d.h"
 
+int parse_color(char *line)
+{
+    int r, g, b;
+    char **colors;
+
+    colors = ft_split(line, ',');
+    if (!colors || ft_arraylen(colors) != 3)
+    {
+        ft_free_array(colors);
+        return (-1);
+    }
+
+    r = ft_atoi(colors[0]);
+    g = ft_atoi(colors[1]);
+    b = ft_atoi(colors[2]);
+
+    ft_free_array(colors);
+
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+        return (-1);
+
+    return (r << 16 | g << 8 | b); // 16진수 색상 값으로 변환 (0xRRGGBB)
+}
+
+
 int dup_info(char *str, t_map *map_data)
 {
     int status;
@@ -14,9 +39,9 @@ int dup_info(char *str, t_map *map_data)
     else if (ft_strncmp(str, "EA ", 3) == 0)
         map_data->EA = ft_strdup_flag(str, &status);
     else if (ft_strncmp(str, "F ", 2) == 0)
-        map_data->F = ft_strdup_flag(str, &status);
+        map_data->F = parse_color(str); // 수정사항 2025.3.11
     else if (ft_strncmp(str, "C ", 2) == 0)
-        map_data->C = ft_strdup_flag(str, &status);
+        map_data->C = parse_color(str); // 수정사항 2025.3.11
     else if (ft_onlyisspace(str) && map_data->exf > 63)
         return (-1);
     else
