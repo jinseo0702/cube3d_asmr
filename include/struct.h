@@ -85,11 +85,10 @@ typedef struct  s_data
     t_allimg   img;            //이미지를 넣을 때 필요한 구조체
     t_two_coordi_node cor;//초기화 함수 없음
     t_ray ray;
-    mlx_texture_t	*texture; // 이미지 파일 텍스처 저장 2025.03.11
-	mlx_texture_t	*north; // 이미지 파일 텍스처 저장 2025.03.11
-	mlx_texture_t	*south; // 이미지 파일 텍스처 저장 2025.03.11
-	mlx_texture_t	*west; // 이미지 파일 텍스처 저장 2025.03.11
-	mlx_texture_t	*east; // 이미지 파일 텍스처 저장 2025.03.11
+    void    *north;
+    void    *south;
+    void    *west;
+    void    *east;
 }               t_data;
 
 #endif

@@ -71,21 +71,11 @@ void draw_floor_and_ceiling(t_data *data)
 
 void load_textures(t_data *data)
 {
-    data->north = mlx_load_png(data->map.NO);
-    data->south = mlx_load_png(data->map.SO);
-    data->west = mlx_load_png(data->map.WE);
-    data->east = mlx_load_png(data->map.EA);
+    data->north = mlx_xpm_file_to_image(data->mlx, data->map.NO, &data->tex_width, &data->tex_height);
+    data->south = mlx_xpm_file_to_image(data->mlx, data->map.SO, &data->tex_width, &data->tex_height);
+    data->west = mlx_xpm_file_to_image(data->mlx, data->map.WE, &data->tex_width, &data->tex_height);
+    data->east = mlx_xpm_file_to_image(data->mlx, data->map.EA, &data->tex_width, &data->tex_height);
 
     if (!data->north || !data->south || !data->west || !data->east)
-        handle_error("Error: mlx_load_png failed");
-}
-
-mlx_texture_t	*init_textures(char *path)
-{
-	mlx_texture_t	*images;
-
-	images = mlx_load_png(path);
-	if (!images)
-		handle_error("Error: mlx_load_png failed");
-	return (images);
+        handle_error("Error: Failed to load textures");
 }

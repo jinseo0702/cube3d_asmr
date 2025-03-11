@@ -234,6 +234,7 @@ int     main(int argc, char **argv)
     data.img.buffer = mlx_get_data_addr(data.img.img, &data.img.pixel_bits,
 			&data.img.line_bytes, &data.img.endian);
     //여기에 파싱한 맵 데이터를 이미지로 찍어내는 함수를 넣어야할 듯 합니다
+	load_textures(&data);	//여기에 그림 파일 텍스쳐를 로드 해둡니다. 2025.03.11
 	draw_map_from_array(&data);
 	// mlx_put_image_to_window(data.mlx, data.win, data.img.img, 0, 0);
     mlx_key_hook(data.win, ft_key_handling, &data);
