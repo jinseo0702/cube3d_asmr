@@ -1,0 +1,781 @@
+맞네, 함수들을 Norm에 맞게 파일로 나눠줘야지! 각 파일은 5개 이하의 함수만 포함해야 해. 함수들을 관련성에 따라 파일로 묶어볼게.
+
+## 1. ray_casting.c
+
+```c
+#include "../include/cub3d.h"
+
+t_ray cast_single_ray(t_data *game, double angle)
+{
+    t_ray ray;
+    
+    init_ray_direction(&ray, angle);
+    init_ray_map_pos(&ray, game);
+    calculate_delta_dist(&ray);
+    calculate_step_side_dist_x(&ray, game);
+    calculate_step_side_dist_y(&ray, game);
+    perform_dda(&ray, game);
+    calculate_wall_distance(&ray, game);
+    
+    return (ray);
+}
+
+void init_ray_direction(t_ray *ray, double angle)
+{
+    ray->dir_x = cos(angle);
+    ray->dir_y = sin(angle);
+}
+
+void init_ray_map_pos(t_ray *ray, t_data *game)
+{
+    ray->map_x = (int)game->cor.x;
+    ray->map_y = (int)game->cor.y;
+}
+
+void calculate_delta_dist(t_ray *ray)
+{
+    if (ray->dir_x == 0)
+        ray->delta_dist_x = 1e30;
+    else
+        ray->delta_dist_x = fabs(1 / ray->dir_x);
+    
+    if (ray->dir_y == 0)
+        ray->delta_dist_y = 1e30;
+    else
+        ray->delta_dist_y = fabs(1 / ray->dir_y);
+}
+
+void calculate_step_side_dist_x(t_ray *ray, t_data *game)
+{
+    if (ray->dir_x < 0)
+    {
+        ray->step_x = -1;
+        ray->side_dist_x = (game->cor.x - ray->map_x) * ray->delta_dist_x;
+    }
+    else
+    {
+        ray->step_x = 1;
+        ray->side_dist_x = (ray->map_x + 1.0 - game->cor.x) * ray->delta_dist_x;
+    }
+}
+```
+
+## 2. ray_dda.c
+
+```c
+#include "../include/cub3d.h"
+
+void calculate_step_side_dist_y(t_ray *ray, t_data *game)
+{
+    if (ray->dir_y < 0)
+    {
+        ray->step_y = -1;
+        ray->side_dist_y = (game->cor.y - ray->map_y) * ray->delta_dist_y;
+    }
+    else
+    {
+        ray->step_y = 1;
+        ray->side_dist_y = (ray->map_y + 1.0 - game->cor.y) * ray->delta_dist_y;
+    }
+}
+
+int check_map_bounds(t_ray *ray, t_data *game)
+{
+    if (ray->map_y < 0 || ray->map_y >= game->map.map_height || 
+        ray->map_x < 0 || ray->map_x >= game->map.map_width)
+    {
+        ray->hit = 1;
+        ray->perp_wall_dist = 20.0;
+        return (1);
+    }
+    return (0);
+}
+
+int check_wall_hit(t_ray *ray, t_data *game)
+{
+    if (game->map.map[ray->map_y][ray->map_x] == '1' || 
+        game->map.map[ray->map_y][ray->map_x] == 'X')
+    {
+        ray->hit = 1;
+        return (1);
+    }
+    return (0);
+}
+
+void perform_dda(t_ray *ray, t_data *game)
+{
+    ray->hit = 0;
+    while (ray->hit == 0)
+    {
+        if (ray->side_dist_x < ray->side_dist_y)
+        {
+            ray->side_dist_x += ray->delta_dist_x;
+            ray->map_x += ray->step_x;
+            ray->side = 0;
+        }
+        else
+        {
+            ray->side_dist_y += ray->delta_dist_y;
+            ray->map_y += ray->step_y;
+            ray->side = 1;
+        }
+        
+        if (check_map_bounds(ray, game) == 1)
+            break;
+        check_wall_hit(ray, game);
+    }
+}
+
+void calculate_wall_distance(t_ray *ray, t_data *game)
+{
+    if (ray->side == 0)
+        ray->perp_wall_dist = fabs((ray->map_x - game->cor.x 
+            + (1 - ray->step_x) / 2) / ray->dir_x);
+    else
+        ray->perp_wall_dist = fabs((ray->map_y - game->cor.y 
+            + (1 - ray->step_y) / 2) / ray->dir_y);
+}
+```
+
+## 3. render_walls.c
+
+```c
+#include "../include/cub3d.h"
+
+void draw_walls_3d(t_data *data)
+{
+    double ray_angle;
+    int x;
+    t_ray ray;
+    int wall_height;
+    double corrected_dist;
+    
+    ray_angle = data->cor.dir - (data->fov / 2);
+    x = 0;
+    
+    while (x < data->width)
+    {
+        ray = cast_single_ray(data, ray_angle);
+        
+        corrected_dist = ray.perp_wall_dist;
+        correct_ray_distance(&corrected_dist, ray_angle, data);
+        
+        wall_height = calculate_wall_height(data, corrected_dist);
+        
+        draw_textured_wall(data, x, ray, wall_height);
+        
+        ray_angle += data->fov / data->width;
+        x++;
+    }
+}
+
+void correct_ray_distance(double *corrected_dist, double ray_angle, t_data *data)
+{
+    double correction;
+    
+    correction = cos(ray_angle - data->cor.dir);
+    *corrected_dist = *corrected_dist * correction;
+    
+    if (*corrected_dist < 0.1)
+        *corrected_dist = 0.1;
+}
+
+int calculate_wall_height(t_data *data, double corrected_dist)
+{
+    int wall_height;
+    
+    wall_height = (int)(data->height / corrected_dist * 0.5);
+    return (wall_height);
+}
+
+void render_3d(t_data *data)
+{
+    draw_floor_ceiling(data);
+    draw_walls_3d(data);
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+}
+
+double get_wall_x(t_data *data, t_ray *ray)
+{
+    double wall_x;
+    
+    if (ray->side == 0)
+        wall_x = data->cor.y + ray->perp_wall_dist * ray->dir_y;
+    else
+        wall_x = data->cor.x + ray->perp_wall_dist * ray->dir_x;
+    
+    wall_x -= floor(wall_x);
+    
+    return (wall_x);
+}
+```
+
+## 4. render_fc.c
+
+```c
+#include "../include/cub3d.h"
+
+void draw_floor_ceiling(t_data *data)
+{
+    draw_ceiling(data);
+    draw_floor(data);
+}
+
+void draw_ceiling(t_data *data)
+{
+    int x;
+    int y;
+    char *dst;
+
+    y = 0;
+    while (y < data->height / 2)
+    {
+        x = 0;
+        while (x < data->width)
+        {
+            dst = data->img.buffer + (y * data->img.line_bytes) 
+                + (x * (data->img.pixel_bits / 8));
+            *(unsigned int *)dst = data->map.C;
+            x++;
+        }
+        y++;
+    }
+}
+
+void draw_floor(t_data *data)
+{
+    int x;
+    int y;
+    char *dst;
+
+    y = data->height / 2;
+    while (y < data->height)
+    {
+        x = 0;
+        while (x < data->width)
+        {
+            dst = data->img.buffer + (y * data->img.line_bytes) 
+                + (x * (data->img.pixel_bits / 8));
+            *(unsigned int *)dst = data->map.F;
+            x++;
+        }
+        y++;
+    }
+}
+
+void init_player_direction(t_data *data)
+{
+    if (data->cor.c == 'N')
+        data->cor.dir = -M_PI / 2;
+    else if (data->cor.c == 'S')
+        data->cor.dir = M_PI / 2;
+    else if (data->cor.c == 'E')
+        data->cor.dir = 0;
+    else if (data->cor.c == 'W')
+        data->cor.dir = M_PI;
+}
+
+void find_obj(t_data *data)
+{
+    int x;
+    int y;
+    
+    data->cor.color = 0xFF0000;
+    y = 0;
+    while (y < data->map.map_height)
+    {
+        x = 0;
+        while (x < data->map.map_width)
+        {
+            if ((ft_isinstr(data->map.map[y][x], "NSWE")))
+            {
+                data->cor.c = data->map.map[y][x];
+                data->cor.x = x;
+                data->cor.y = y;
+                return ;
+            }
+            x++;
+        }
+        y++;
+    }
+}
+```
+
+## 5. texture_utils.c
+
+```c
+#include "../include/cub3d.h"
+
+int get_tex_x(t_data *data, t_ray *ray)
+{
+    double wall_x;
+    int tex_x;
+    
+    if (ray->side == 0)
+        wall_x = data->cor.y + ray->perp_wall_dist * ray->dir_y;
+    else
+        wall_x = data->cor.x + ray->perp_wall_dist * ray->dir_x;
+    wall_x -= floor(wall_x);
+    
+    tex_x = (int)(wall_x * (double)TEX_WIDTH);
+    
+    if ((ray->side == 0 && ray->dir_x > 0) || 
+        (ray->side == 1 && ray->dir_y < 0))
+        tex_x = TEX_WIDTH - tex_x - 1;
+    
+    return (tex_x);
+}
+
+void calculate_wall_bounds(int wall_height, t_data *data, 
+                          int *draw_start, int *draw_end)
+{
+    *draw_start = -wall_height / 2 + data->height / 2;
+    if (*draw_start < 0)
+        *draw_start = 0;
+
+    *draw_end = wall_height / 2 + data->height / 2;
+    if (*draw_end >= data->height)
+        *draw_end = data->height - 1;
+}
+
+t_allimg *select_texture_x_side(t_ray ray, t_data *data)
+{
+    if (ray.dir_x > 0)
+        return (&data->tex_e);
+    else
+        return (&data->tex_w);
+}
+
+t_allimg *select_texture_y_side(t_ray ray, t_data *data)
+{
+    if (ray.dir_y > 0)
+        return (&data->tex_s);
+    else
+        return (&data->tex_n);
+}
+
+t_allimg *select_texture(t_ray ray, t_data *data)
+{
+    if (ray.side == 0)
+        return (select_texture_x_side(ray, data));
+    else
+        return (select_texture_y_side(ray, data));
+}
+```
+
+## 6. texture_render.c
+
+```c
+#include "../include/cub3d.h"
+
+void draw_textured_wall(t_data *data, int x, t_ray ray, int wall_height)
+{
+    t_wall_tex tex;
+    int draw_start;
+    int draw_end;
+    t_allimg *tex_img;
+    
+    calculate_wall_bounds(wall_height, data, &draw_start, &draw_end);
+    tex_img = select_texture(ray, data);
+    
+    tex.buffer = tex_img->buffer;
+    tex.line_bytes = tex_img->line_bytes;
+    tex.pixel_bits = tex_img->pixel_bits;
+    tex.tex_x = get_tex_x(data, &ray);
+    tex.height = wall_height;
+    
+    draw_wall_line(data, x, draw_start, draw_end, tex);
+}
+
+void setup_texture_info(t_wall_tex *tex, t_allimg *tex_img, 
+                       t_data *data, t_ray *ray, int wall_height)
+{
+    tex->buffer = tex_img->buffer;
+    tex->line_bytes = tex_img->line_bytes;
+    tex->pixel_bits = tex_img->pixel_bits;
+    tex->tex_x = get_tex_x(data, ray);
+    tex->height = wall_height;
+}
+
+void draw_wall_line(t_data *data, int x, int start, int end, t_wall_tex tex)
+{
+    int y;
+    int tex_y;
+    double step;
+    double tex_pos;
+    char *dst;
+    char *src;
+    int color;
+    
+    step = (double)TEX_HEIGHT / tex.height;
+    tex_pos = (start - data->height / 2 + tex.height / 2) * step;
+    
+    y = start;
+    while (y < end)
+    {
+        tex_y = (int)tex_pos & (TEX_HEIGHT - 1);
+        tex_pos += step;
+        
+        src = tex.buffer + (tex_y * tex.line_bytes + tex.tex_x * (tex.pixel_bits / 8));
+        color = *(unsigned int *)src;
+        
+        if (y >= 0 && y < data->height && x >= 0 && x < data->width)
+        {
+            dst = data->img.buffer + (y * data->img.line_bytes + x * (data->img.pixel_bits / 8));
+            *(unsigned int *)dst = color;
+        }
+        y++;
+    }
+}
+
+void init_textures(t_data *data)
+{
+    int width;
+    int height;
+
+    data->tex_n.width = TEX_WIDTH;
+    data->tex_n.height = TEX_HEIGHT;
+    data->tex_s.width = TEX_WIDTH;
+    data->tex_s.height = TEX_HEIGHT;
+    data->tex_w.width = TEX_WIDTH;
+    data->tex_w.height = TEX_HEIGHT;
+    data->tex_e.width = TEX_WIDTH;
+    data->tex_e.height = TEX_HEIGHT;
+    
+    data->north = mlx_xpm_file_to_image(data->mlx, data->map.NO, &width, &height);
+    data->south = mlx_xpm_file_to_image(data->mlx, data->map.SO, &width, &height);
+    data->west = mlx_xpm_file_to_image(data->mlx, data->map.WE, &width, &height);
+    data->east = mlx_xpm_file_to_image(data->mlx, data->map.EA, &width, &height);
+    
+    data->tex_n.img = data->north;
+    data->tex_s.img = data->south;
+    data->tex_w.img = data->west;
+    data->tex_e.img = data->east;
+    
+    if (data->tex_n.img)
+        data->tex_n.buffer = mlx_get_data_addr(data->tex_n.img, 
+        &data->tex_n.pixel_bits, &data->tex_n.line_bytes, &data->tex_n.endian);
+    if (data->tex_s.img)
+        data->tex_s.buffer = mlx_get_data_addr(data->tex_s.img, 
+        &data->tex_s.pixel_bits, &data->tex_s.line_bytes, &data->tex_s.endian);
+    if (data->tex_w.img)
+        data->tex_w.buffer = mlx_get_data_addr(data->tex_w.img, 
+        &data->tex_w.pixel_bits, &data->tex_w.line_bytes, &data->tex_w.endian);
+    if (data->tex_e.img)
+        data->tex_e.buffer = mlx_get_data_addr(data->tex_e.img, 
+        &data->tex_e.pixel_bits, &data->tex_e.line_bytes, &data->tex_e.endian);
+}
+
+void load_textures(t_data *data)
+{
+    init_textures(data);
+}
+```
+
+## 7. line_draw.c
+
+```c
+#include "../include/cub3d.h"
+
+void draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int color)
+{
+    process_line_algorithm(data, x1, y1, x2, y2, color);
+}
+
+void init_line_draw(int *dx, int *dy, int *sx, int *sy, 
+                  int x1, int y1, int x2, int y2)
+{
+    *dx = abs(x2 - x1);
+    *dy = -abs(y2 - y1);
+    
+    if (x1 < x2)
+        *sx = 1;
+    else
+        *sx = -1;
+        
+    if (y1 < y2)
+        *sy = 1;
+    else
+        *sy = -1;
+}
+
+void set_line_pixel(t_data *data, int x, int y, int color)
+{
+    char *dst;
+    
+    if (x >= 0 && x < data->width && y >= 0 && y < data->height)
+    {
+        dst = data->img.buffer + (y * data->img.line_bytes) + 
+            (x * (data->img.pixel_bits / 8));
+        *(unsigned int *)dst = color;
+    }
+}
+
+void process_line_algorithm(t_data *data, int x1, int y1, 
+                         int x2, int y2, int color)
+{
+    int dx;
+    int dy;
+    int sx;
+    int sy;
+    int err;
+    int e2;
+    
+    init_line_draw(&dx, &dy, &sx, &sy, x1, y1, x2, y2);
+    err = dx + dy;
+    
+    while (1)
+    {
+        set_line_pixel(data, x1, y1, color);
+        
+        if (x1 == x2 && y1 == y2)
+            break;
+            
+        e2 = 2 * err;
+        if (e2 >= dy)
+        {
+            if (x1 == x2)
+                break;
+            err += dy;
+            x1 += sx;
+        }
+        if (e2 <= dx)
+        {
+            if (y1 == y2)
+                break;
+            err += dx;
+            y1 += sy;
+        }
+    }
+}
+
+void draw_square_to_image(t_data *data, int x, int y, int color)
+{
+    int i;
+    int j;
+    int pixel_x;
+    int pixel_y;
+    char *dst;
+
+    pixel_x = x * TILE_SIZE;
+    pixel_y = y * TILE_SIZE;
+    
+    i = 0;
+    while (i < TILE_SIZE)
+    {
+        j = 0;
+        while (j < TILE_SIZE)
+        {
+            dst = data->img.buffer + ((pixel_y + i) * data->img.line_bytes) + 
+                ((pixel_x + j) * (data->img.pixel_bits / 8));
+            *(unsigned int *)dst = color;
+            j++;
+        }
+        i++;
+    }
+}
+```
+
+## 8. ray_viz.c
+
+```c
+#include "../include/cub3d.h"
+
+void draw_rays(t_data *data)
+{
+    double ray_angle;
+    int i;
+    double player_dir;
+    
+    player_dir = -M_PI / 2;
+    ray_angle = player_dir - (data->fov / 2);
+    
+    i = 0;
+    while (i < data->ray_count)
+    {
+        draw_single_ray(data, ray_angle);
+        ray_angle += data->fov / data->ray_count;
+        i++;
+    }
+}
+
+double limit_ray_length(double ray_length, t_data *data)
+{
+    if (ray_length > data->map.map_width || ray_length > data->map.map_height)
+    {
+        if (data->map.map_width < data->map.map_height)
+            return (data->map.map_width);
+        else
+            return (data->map.map_height);
+    }
+    return (ray_length);
+}
+
+void calculate_ray_endpoint(int start_x, int start_y, int *end_x, int *end_y, 
+                         double ray_angle, double ray_length)
+{
+    *end_x = start_x + cos(ray_angle) * ray_length * TILE_SIZE;
+    *end_y = start_y + sin(ray_angle) * ray_length * TILE_SIZE;
+}
+
+void draw_single_ray(t_data *data, double ray_angle)
+{
+    t_ray ray;
+    int start_x;
+    int start_y;
+    int end_x;
+    int end_y;
+    double ray_length;
+    
+    start_x = (data->cor.x * TILE_SIZE);
+    start_y = (data->cor.y * TILE_SIZE);
+    
+    ray = cast_single_ray(data, ray_angle);
+    ray_length = ray.perp_wall_dist;
+    ray_length = limit_ray_length(ray_length, data);
+    
+    calculate_ray_endpoint(start_x, start_y, &end_x, &end_y, 
+                        ray_angle, ray_length);
+    
+    draw_line_to_image(data, start_x, start_y, end_x, end_y, 0xFFFF33);
+}
+
+void draw_map_from_array(t_data *data)
+{
+    int x;
+    int y;
+    int color;
+
+    mlx_clear_window(data->mlx, data->win);
+    y = 0;
+    while (y < data->map.map_height)
+    {
+        x = 0;
+        while (x < data->map.map_width)
+        {
+            if (data->map.map[y][x] == '1')
+                color = 0xFFFFFF;
+            else if (data->map.map[y][x] == '2')
+                color = 0x000000;
+            else if (ft_isinstr(data->map.map[y][x], "NSWE"))
+                color = 0xFF0000;
+            else
+            {
+                x++;
+                continue;
+            }
+            draw_square_to_image(data, x, y, color);
+            x++;
+        }
+        y++;
+    }
+    draw_rays(data);
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+}
+```
+
+## 9. player_movement.c
+
+```c
+#include "../include/cub3d.h"
+
+// 플레이어 전방 이동 처리
+void move_player_forward(t_data *data)
+{
+    double new_x;
+    double new_y;
+    
+    new_x = data->cor.x + cos(data->cor.dir) * 0.1;
+    new_y = data->cor.y + sin(data->cor.dir) * 0.1;
+    
+    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+        data->map.map[(int)new_y][(int)new_x] != 'X')
+    {
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+        data->cor.x = new_x;
+        data->cor.y = new_y;
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+    }
+}
+
+// 플레이어 후방 이동 처리
+void move_player_backward(t_data *data)
+{
+    double new_x;
+    double new_y;
+    
+    new_x = data->cor.x - cos(data->cor.dir) * 0.1;
+    new_y = data->cor.y - sin(data->cor.dir) * 0.1;
+    
+    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+        data->map.map[(int)new_y][(int)new_x] != 'X')
+    {
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+        data->cor.x = new_x;
+        data->cor.y = new_y;
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+    }
+}
+
+// 플레이어 좌측 이동 처리
+void move_player_left(t_data *data)
+{
+    double new_x;
+    double new_y;
+    
+    new_x = data->cor.x - cos(data->cor.dir + M_PI / 2) * 0.1;
+    new_y = data->cor.y - sin(data->cor.dir + M_PI / 2) * 0.1;
+    
+    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+        data->map.map[(int)new_y][(int)new_x] != 'X')
+    {
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+        data->cor.x = new_x;
+        data->cor.y = new_y;
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+    }
+}
+
+// 플레이어 우측 이동 처리
+void move_player_right(t_data *data)
+{
+    double new_x;
+    double new_y;
+    
+    new_x = data->cor.x + cos(data->cor.dir + M_PI / 2) * 0.1;
+    new_y = data->cor.y + sin(data->cor.dir + M_PI / 2) * 0.1;
+    
+    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+        data->map.map[(int)new_y][(int)new_x] != 'X')
+    {
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+        data->cor.x = new_x;
+        data->cor.y = new_y;
+        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+    }
+}
+
+// 플레이어 회전 처리
+void rotate_player(t_data *data, int direction)
+{
+    double rotation_speed;
+    
+    rotation_speed = 0.1;
+    if (direction < 0)
+    {
+        data->cor.dir -= rotation_speed;
+        if (data->cor.dir < 0)
+            data->cor.dir += 2 * M_PI;
+    }
+    else
+    {
+        data->cor.dir += rotation_speed;
+        if (data->cor.dir > 2 * M_PI)
+            data->cor.dir -= 2 * M_PI;
+    }
+}
+```
+
+각 파일은 Norm 규칙에 맞게 최대 5개의 함수로 구성되어 있어. 이렇게 코드를 논리적으로 분리하면 유지보수도 쉬워지고, 작업 분담도 쉬워져. 각 파일이 특정 기능에 집중하도록 구성했어.
+
+이 모든 파일들을 컴파일하고 헤더 파일과 함께 사용하면 멋진 레이캐스팅 엔진이 완성될 거야!

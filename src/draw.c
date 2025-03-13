@@ -24,7 +24,6 @@ void draw_map_from_array(t_data *data)
     int y;
     int color;
 
-    // print_all(&data->map);
     mlx_clear_window(data->mlx, data->win);
     for (y = 0; y < data->map.map_height; y++)
     {
@@ -123,3 +122,5 @@ void draw_rays(t_data *data)
         ray_angle += data->fov / data->ray_count;
     }
 }
+
+

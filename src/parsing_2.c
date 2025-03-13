@@ -46,13 +46,30 @@ int dup_info(char *str, t_map *map_data)
 
     status = 0;
     if (ft_strncmp(str, "NO ", 3) == 0)
-        map_data->NO = ft_strdup_flag(str, &status);
+        {
+            map_data->NO = ft_strdup_flag(str + 3, &status);
+            char *ptr = ft_strchr(map_data->NO, '\n');
+            *ptr = '\0';
+        }
     else if (ft_strncmp(str, "SO ", 3) == 0)
-        map_data->SO = ft_strdup_flag(str, &status);
+        {
+            map_data->SO = ft_strdup_flag(str + 3, &status);
+            char *ptr = ft_strchr(map_data->SO, '\n');
+            *ptr = '\0';
+            
+        }
     else if (ft_strncmp(str, "WE ", 3) == 0)
-        map_data->WE = ft_strdup_flag(str, &status);
+        {
+            map_data->WE = ft_strdup_flag(str + 3, &status);
+            char *ptr = ft_strchr(map_data->WE, '\n');
+            *ptr = '\0';
+        }
     else if (ft_strncmp(str, "EA ", 3) == 0)
-        map_data->EA = ft_strdup_flag(str, &status);
+        {
+            map_data->EA = ft_strdup_flag(str + 3, &status);
+            char *ptr = ft_strchr(map_data->EA, '\n');
+            *ptr = '\0';
+        }
     else if (ft_strncmp(str, "F ", 2) == 0)
         map_data->F = parse_color(str); // 수정사항 2025.3.11
     else if (ft_strncmp(str, "C ", 2) == 0)
@@ -92,7 +109,7 @@ int is_right_map(char *str, t_map *map_data)
     while (map_data->map[map_data->map_height][++idx])
         if(ft_isspace(map_data->map[map_data->map_height][idx]))
             map_data->map[map_data->map_height][idx] = 'X';
-    printf("%s\n", map_data->map[map_data->map_height]);
+    // printf("%s\n", map_data->map[map_data->map_height]);
     if (ft_strlen(str) < map_data->map_width)
         map_data->map[map_data->map_height][ft_strlen(str) + 1] = 'X';
     else
@@ -122,7 +139,7 @@ int insert_data(t_map *map_data, char *map)
 	{
         if(dup_info(temp, map_data) == 1 && map_data->exf^63)
             map_data->exf = (map_data->exf >> 1);
-        printf("%d %s\n", map_data->exf, temp);
+        // printf("%d %s\n", map_data->exf, temp);
         ft_freenull(&temp);
 	}
     map_data->map[map_data->map_height] = ft_calloc(sizeof(char), map_data->map_width + 2);
@@ -140,8 +157,6 @@ void print_all(t_map *map)
     printf("SO is %s ", map->SO);
     printf("WE is %s ", map->WE);
     printf("EA is %s ", map->EA);
-    // printf("F is %s ", map->F);
-    // printf("C is %s ", map->C);
     printf("print map\n");
     int idx = 0;
     while (map->map[idx])

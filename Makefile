@@ -11,18 +11,27 @@
 # **************************************************************************** #
 
 CC = cc
-# CFLAGS = -Wall -Wextra -Werror
-CFLAGS = -g
+CFLAGS = -Wall -Wextra -Werror -g
+# CFLAGS = -g
 RM = rm -rf
 
-SRC = src/main.c \
-src/draw.c \
-src/parsing.c \
-src/parsing_2.c \
-src/flood_fill.c \
-src/image.c \
-src/util.c \
-src/holly.c \
+SRC = src2/main.c \
+      src2/event.c \
+      src2/key_handlers.c \
+      src2/player_movement.c \
+      src2/ray_casting.c \
+      src2/ray_dda.c \
+      src2/render_walls.c \
+      src2/render_fc.c \
+      src2/ray_viz.c \
+      src2/texture_utils.c \
+      src2/texture_render.c \
+      src2/line_draw.c \
+      src2/parsing_init.c \
+      src2/parsing_color.c \
+      src2/parsing_map_check.c \
+      src2/parsing_map_data.c \
+      src2/flood_fill.c \
 
 MLX = ./minilibx-linux
 

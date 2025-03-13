@@ -239,12 +239,13 @@ int ft_key_handling(int keycode, t_data *data)
         if (data->cor.dir > 2 * M_PI)
             data->cor.dir -= 2 * M_PI;
     }
-
+    print_all(&data->map);
     // 키 입력 후 화면 업데이트
     if (data->view_mode)
         render_3d(data);
     else
         draw_map_from_array(data);
+    
 
     return (0);
 }
@@ -288,7 +289,6 @@ int main(int argc, char **argv)
     init_player_direction(&data);
     
     // 화면 크기 가져오기 (여기서는 고정값을 사용)
-    // mlx_get_screen_size는 창을 만들기 전에 호출할 수 없음
     data.width = 800;  // 적절한 해상도로 수정
     data.height = 600;
     
@@ -305,7 +305,7 @@ int main(int argc, char **argv)
     data.img.buffer = mlx_get_data_addr(data.img.img, &data.img.pixel_bits,
             &data.img.line_bytes, &data.img.endian);
     
-    // 텍스처 로드
+    // 텍스처 로드 - 새로운 초기화 함수 사용
     load_textures(&data);
     
     // 기본 모드는 3D 맵 (수정 가능)

@@ -1,6 +1,10 @@
 # ifndef STRUCT_H
 # define STRUCT_H
 
+// 텍스처 사이즈 정의 (파워 오브 2 값으로 설정)
+# define TEX_WIDTH 64
+# define TEX_HEIGHT 64
+
 typedef struct s_allimg
 {
 	void					*img;   //이미지
@@ -11,6 +15,15 @@ typedef struct s_allimg
 	int						line_bytes; //mlx_new_image 이 함수 쓸 때, 사용한 라인의 바이트
     int						endian;     //mlx_new_image 이 함수 쓸 때, 사용할 엔디안 값
 }			t_allimg;
+
+typedef struct s_wall_tex
+{
+	char	*buffer;    // 텍스처 픽셀 데이터
+	int		line_bytes; // 한 라인의 바이트 수
+	int		pixel_bits; // 픽셀 비트 수
+	int		tex_x;      // 텍스처 X 좌표
+	int		height;     // 벽의 높이
+}			t_wall_tex;
 
 typedef struct s_two_coordi_node
 {
@@ -91,6 +104,10 @@ typedef struct  s_data
     void    *south;
     void    *west;
     void    *east;
+    t_allimg tex_n;     // 북쪽 텍스처
+    t_allimg tex_s;     // 남쪽 텍스처
+    t_allimg tex_w;     // 서쪽 텍스처
+    t_allimg tex_e;     // 동쪽 텍스처
 }               t_data;
 
 #endif
