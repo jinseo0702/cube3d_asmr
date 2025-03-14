@@ -42,7 +42,7 @@ int check_args(int argc, char **argv, t_data *data)
 {
     if (argc != 2)
     {
-        printf("Error\n잘못된 인자 개수입니다. ./cub3D [맵파일.cub] 형식으로 실행하세요.\n");
+        printf("Error check argument count\n");
         return (0);
     }
 
@@ -60,7 +60,7 @@ void init_mlx(t_data *data)
     data->mlx = mlx_init();
     if (!data->mlx)
     {
-        printf("Error\nMLX 초기화에 실패했습니다.\n");
+        printf("Mlx Init Failed ");
         exit(1);
     }
 }

@@ -108,6 +108,7 @@ typedef struct  s_data
     t_allimg tex_s;     // 남쪽 텍스처
     t_allimg tex_w;     // 서쪽 텍스처
     t_allimg tex_e;     // 동쪽 텍스처
+    int status;
 }               t_data;
 
 #endif

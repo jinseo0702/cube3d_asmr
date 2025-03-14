@@ -38,12 +38,10 @@ void copy_and_process_map_line(t_map *map_data, char *str)
     map_data->map[map_data->map_height] = ft_calloc(1, map_data->map_width + 2);
     ft_memset(map_data->map[map_data->map_height], 'X', map_data->map_width + 1);
     ft_strlcpy(&map_data->map[map_data->map_height][1], str, ft_strlen(str) + 2);
-    
     idx = -1;
     while (map_data->map[map_data->map_height][++idx])
         if(ft_isspace(map_data->map[map_data->map_height][idx]))
             map_data->map[map_data->map_height][idx] = 'X';
-            
     if ((int)ft_strlen(str) < map_data->map_width)
         map_data->map[map_data->map_height][ft_strlen(str) + 1] = 'X';
     else
@@ -60,7 +58,7 @@ int validate_map_line(char *str)
     {
         if (!is_valid_map_char(str[idx]))
         {
-            printf("Error\n맵에 허용되지 않는 문자가 있습니다: %c\n", str[idx]);
+            printf("Error : %c is not correct format in map\n", str[idx]);
             return (0);
         }
     }
@@ -68,25 +66,10 @@ int validate_map_line(char *str)
 }
 
 // 맵 라인이 올바른지 검사하는 메인 함수
-int is_right_map(char *str, t_map *map_data)
+void is_right_map(char *str, t_map *map_data, t_data *data)
 {
-    int status;
-
-    status = 0;
-    if (ft_onlyisspace(str))
-    {
-        printf("Error\n맵에 빈 줄이 있습니다.\n");
-        return (-1);
-    }
-    
     if (!validate_map_line(str))
-        return (-1);
-    
+        data->status -= 1;
     copy_and_process_map_line(map_data, str);
     map_data->map_height++;
-    
-    if(status == -1)
-        return (-1);
-    
-    return (1);
 }

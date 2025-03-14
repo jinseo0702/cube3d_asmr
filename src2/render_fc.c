@@ -76,23 +76,24 @@ void find_obj(t_data *data)
 {
     int x;
     int y;
+    static int cnt;
     
     data->cor.color = 0xFF0000;
-    y = 0;
-    while (y < data->map.map_height)
+    y = -1;
+    while (++y < data->map.map_height)
     {
-        x = 0;
-        while (x < data->map.map_width)
+        x = -1;
+        while (++x < data->map.map_width)
         {
             if ((ft_isinstr(data->map.map[y][x], "NSWE")))
             {
                 data->cor.c = data->map.map[y][x];
                 data->cor.x = x;
                 data->cor.y = y;
-                return ;
+                cnt++;
+                if (cnt > 1)
+                    data->status -= 1;
             }
-            x++;
         }
-        y++;
     }
 }

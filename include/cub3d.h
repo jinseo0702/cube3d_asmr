@@ -22,7 +22,6 @@
 # define KEY_S      115
 # define KEY_A      97
 # define KEY_D      100
-# define KEY_M      109
 # define KEY_ESCAPE 65307
 
 /* 게임 관련 상수 */
@@ -43,9 +42,9 @@ int     map_parsing(char *map, t_data *data);
 void    init_t_map(t_map *map_data);
 int     check_size(t_map *map_data);
 int     check_arg(char *str);
-int     dup_info(char *str, t_map *map_data);
-int     is_right_map(char *str, t_map *map_data);
-int     insert_data(t_map *map_data, char *map);
+int     dup_info(char *str, t_map *map_data, t_data *data);
+void     is_right_map(char *str, t_map *map_data, t_data *data);
+int     insert_data(t_map *map_data, char *map, t_data *data);//수정 요망 
 
 /* 맵 검증 함수 */
 int     is_valid_map_char(char c);
@@ -96,7 +95,6 @@ void    draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int col
 void    init_line_draw(int *dx, int *dy, int *sx, int *sy, int x1, int y1, int x2, int y2);
 void    set_line_pixel(t_data *data, int x, int y, int color);
 void    process_line_algorithm(t_data *data, int x1, int y1, int x2, int y2, int color);
-void    draw_square_to_image(t_data *data, int x, int y, int color);
 
 /* 광선 캐스팅 관련 함수 */
 t_ray   cast_single_ray(t_data *game, double angle);

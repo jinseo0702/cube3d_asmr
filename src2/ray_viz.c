@@ -70,36 +70,3 @@ void draw_single_ray(t_data *data, double ray_angle)
     
     draw_line_to_image(data, start_x, start_y, end_x, end_y, 0xFFFF33);
 }
-
-void draw_map_from_array(t_data *data)
-{
-    int x;
-    int y;
-    int color;
-
-    mlx_clear_window(data->mlx, data->win);
-    y = 0;
-    while (y < data->map.map_height)
-    {
-        x = 0;
-        while (x < data->map.map_width)
-        {
-            if (data->map.map[y][x] == '1')
-                color = 0xFFFFFF;
-            else if (data->map.map[y][x] == '2')
-                color = 0x000000;
-            else if (ft_isinstr(data->map.map[y][x], "NSWE"))
-                color = 0xFF0000;
-            else
-            {
-                x++;
-                continue;
-            }
-            draw_square_to_image(data, x, y, color);
-            x++;
-        }
-        y++;
-    }
-    draw_rays(data);
-    mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
-}

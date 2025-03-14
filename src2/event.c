@@ -34,8 +34,6 @@ void update_view(t_data *data)
 {
 	if (data->view_mode)
 		render_3d(data);
-	else
-		draw_map_from_array(data);
 }
 
 int handle_movement_keys(int keycode, t_data *data)
@@ -60,12 +58,7 @@ int handle_movement_keys(int keycode, t_data *data)
 
 int ft_key_handling(int keycode, t_data *data)
 {
-	if (keycode == KEY_M)
-	{
-		data->view_mode = !data->view_mode;
-		update_view(data);
-	}
-	else if (keycode == KEY_ESCAPE)
+	if (keycode == KEY_ESCAPE)
 	{
 		ft_exit_handling(data);
 	}

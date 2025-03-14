@@ -94,4 +94,5 @@ void init_cub3d_program(t_data *data)
     data->ray_len = 10.0;
     data->ray_count = 120;
     data->fov = M_PI / 3;
+    data->status = 0;
 }

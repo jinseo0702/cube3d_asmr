@@ -77,6 +77,4 @@ void update_game_state(t_data *data)
 {
     if (data->view_mode)
         render_3d(data);
-    else
-        draw_map_from_array(data);
 }

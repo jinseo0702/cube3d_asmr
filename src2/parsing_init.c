@@ -33,18 +33,18 @@ int map_parsing(char *map, t_data *data)
     init_t_map(&data->map);
     if (ft_strrstr(map, ".cub", 4) == 0)
     {
-        printf("Error\n파일 확장자가 .cub이 아닙니다.\n");
+        printf("Error Check again map Format\n");
         return (0);
     }
     data->map.fd = open(map, O_RDONLY);
     if (data->map.fd < 0)
     {
-        printf("Error\n파일을 열 수 없습니다.\n");
+        printf("Error map file not open! check map file\n");
         return (0);
     }
     if (check_size(&data->map) == 0)
         return (0);
-    insert_data(&data->map, map);
+    insert_data(&data->map, map, data);
     return (1);
 }
 
@@ -89,8 +89,8 @@ int check_size(t_map *map_data)
         map_data->exf |= check_arg(temp);
         if (check_arg(temp) && check_arg(temp) != 64)
             map_data->exf |= (1 << (++cnt));
-        if (map_data->exf < 8191 && (check_arg(temp) == 0))
-            printf("Error\n잘못된 맵 형식입니다.\n");
+        if (map_data->exf < 8191 && (check_arg(temp) == 0))//.cub file에 texture and color 사이에 이상한 값이 있는경우
+            printf("Error Check File Format\n");
         ft_freenull(&temp);
         map_data->high++;
     }
