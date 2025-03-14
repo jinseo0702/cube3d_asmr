@@ -69,14 +69,11 @@ int     handle_movement_keys(int keycode, t_data *data);
 /* 플레이어 움직임 함수 */
 void    move_player_forward(t_data *data);
 void    move_player_backward(t_data *data);
-void    move_player_left(t_data *data);
-void    move_player_right(t_data *data);
 void    rotate_player(t_data *data, int direction);
 int     is_move_valid(t_data *data, double new_x, double new_y);
 void    update_player_position(t_data *data, double new_x, double new_y);
 void    process_wasd_movement(int keycode, t_data *data);
 void    process_arrow_rotation(int keycode, t_data *data);
-void    update_game_state(t_data *data);
 
 /* 플러드 필 알고리즘 */
 void    solve_Dfs(char **map, int x, int y, int *status);

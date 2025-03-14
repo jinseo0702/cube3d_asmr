@@ -50,43 +50,6 @@ void move_player_backward(t_data *data)
     }
 }
 
-// 플레이어 좌측 이동 처리
-void move_player_left(t_data *data)
-{
-    double new_x;
-    double new_y;
-    
-    new_x = data->cor.x - cos(data->cor.dir + M_PI / 2) * 0.1;
-    new_y = data->cor.y - sin(data->cor.dir + M_PI / 2) * 0.1;
-    
-    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
-        data->map.map[(int)new_y][(int)new_x] != 'X')
-    {
-        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
-        data->cor.x = new_x;
-        data->cor.y = new_y;
-        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
-    }
-}
-
-// 플레이어 우측 이동 처리
-void move_player_right(t_data *data)
-{
-    double new_x;
-    double new_y;
-    
-    new_x = data->cor.x + cos(data->cor.dir + M_PI / 2) * 0.1;
-    new_y = data->cor.y + sin(data->cor.dir + M_PI / 2) * 0.1;
-    
-    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
-        data->map.map[(int)new_y][(int)new_x] != 'X')
-    {
-        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
-        data->cor.x = new_x;
-        data->cor.y = new_y;
-        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
-    }
-}
 
 // 플레이어 회전 처리
 void rotate_player(t_data *data, int direction)

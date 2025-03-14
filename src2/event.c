@@ -42,13 +42,9 @@ int handle_movement_keys(int keycode, t_data *data)
 		move_player_forward(data);
 	else if (keycode == KEY_DOWN || keycode == KEY_S)
 		move_player_backward(data);
-	else if (keycode == KEY_A)
-		move_player_left(data);
-	else if (keycode == KEY_D)
-		move_player_right(data);
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_LEFT || keycode == KEY_A)
 		rotate_player(data, -1);
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_RIGHT || keycode == KEY_D)
 		rotate_player(data, 1);
 	else
 		return (0);

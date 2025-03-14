@@ -71,10 +71,3 @@ void process_arrow_rotation(int keycode, t_data *data)
             data->cor.dir -= 2 * M_PI;
     }
 }
-
-// 키 입력에 따른 게임 상태 업데이트 함수
-void update_game_state(t_data *data)
-{
-    if (data->view_mode)
-        render_3d(data);
-}
