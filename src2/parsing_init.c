@@ -28,24 +28,23 @@ void init_t_map(t_map *map_data)
     map_data->map = NULL;
 }
 
-int map_parsing(char *map, t_data *data)
+int map_check(char *map, t_data *data)
 {
     init_t_map(&data->map);
     if (ft_strrstr(map, ".cub", 4) == 0)
     {
         printf("Error Check again map Format\n");
-        return (0);
+        return (FALSE);
     }
     data->map.fd = open(map, O_RDONLY);
     if (data->map.fd < 0)
     {
         printf("Error map file not open! check map file\n");
-        return (0);
+        return (FALSE);
     }
     if (check_size(&data->map) == 0)
-        return (0);
-    insert_data(&data->map, map, data);
-    return (1);
+        return (FALSE);
+    return (TRUE);
 }
 
 int check_arg(char *str)

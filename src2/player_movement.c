@@ -12,34 +12,21 @@
 
 #include "../include/cub3d.h"
 
-// 플레이어 전방 이동 처리
-void move_player_forward(t_data *data)
+void move_player(t_data *data, int flag)//flag == KEYup 이면
 {
     double new_x;
     double new_y;
     
-    new_x = data->cor.x + cos(data->cor.dir) * 0.1;
-    new_y = data->cor.y + sin(data->cor.dir) * 0.1;
-    
-    if (data->map.map[(int)new_y][(int)new_x] != '1' && 
-        data->map.map[(int)new_y][(int)new_x] != 'X')
+    if (flag == KEY_UP)
     {
-        data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
-        data->cor.x = new_x;
-        data->cor.y = new_y;
-        data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+        new_x = data->cor.x + cos(data->cor.dir) * 0.1;
+        new_y = data->cor.y + sin(data->cor.dir) * 0.1;
     }
-}
-
-// 플레이어 후방 이동 처리
-void move_player_backward(t_data *data)
-{
-    double new_x;
-    double new_y;
-    
-    new_x = data->cor.x - cos(data->cor.dir) * 0.1;
-    new_y = data->cor.y - sin(data->cor.dir) * 0.1;
-    
+    else
+    {
+        new_x = data->cor.x - cos(data->cor.dir) * 0.1;
+        new_y = data->cor.y - sin(data->cor.dir) * 0.1;
+    }
     if (data->map.map[(int)new_y][(int)new_x] != '1' && 
         data->map.map[(int)new_y][(int)new_x] != 'X')
     {

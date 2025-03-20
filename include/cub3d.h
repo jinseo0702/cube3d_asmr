@@ -30,6 +30,10 @@
 # define NUM_RAYS   120
 # define MAX_DEPTH  20
 
+# define TRUE  1
+# define FALSE  0
+
+
 /* 메인 및 초기화 함수 */
 int     check_args(int argc, char **argv, t_data *data);
 void    init_mlx(t_data *data);
@@ -38,22 +42,21 @@ void    init_image(t_data *data);
 void    init_cub3d_program(t_data *data);
 
 /* 맵 파싱 함수 */
-int     map_parsing(char *map, t_data *data);
+int     map_check(char *map, t_data *data);
 void    init_t_map(t_map *map_data);
 int     check_size(t_map *map_data);
 int     check_arg(char *str);
-int     dup_info(char *str, t_map *map_data, t_data *data);
-void     is_right_map(char *str, t_map *map_data, t_data *data);
-int     insert_data(t_map *map_data, char *map, t_data *data);//수정 요망 
+int     dup_info(char *str, t_map *map_data);
+void     is_right_map(char *str, t_map *map_data);
+int     insert_data(t_map *map_data, char *map);//수정 요망 
 
 /* 맵 검증 함수 */
 int     is_valid_map_char(char c);
-int     has_non_space_char(char *str);
 void    copy_and_process_map_line(t_map *map_data, char *str);
-int     validate_map_line(char *str);
+void     validate_map_line(char *str);
 
 /* 컬러 파싱 함수 */
-int     validate_rgb(int r, int g, int b);
+void     validate_rgb(int r, int g, int b);
 char    **split_rgb_parts(char *color_str);
 char    **split_color_line(char *line);
 int     create_color(int r, int g, int b);
@@ -67,8 +70,7 @@ void    update_view(t_data *data);
 int     handle_movement_keys(int keycode, t_data *data);
 
 /* 플레이어 움직임 함수 */
-void    move_player_forward(t_data *data);
-void    move_player_backward(t_data *data);
+void move_player(t_data *data, int flag);
 void    rotate_player(t_data *data, int direction);
 int     is_move_valid(t_data *data, double new_x, double new_y);
 void    update_player_position(t_data *data, double new_x, double new_y);
@@ -76,16 +78,16 @@ void    process_wasd_movement(int keycode, t_data *data);
 void    process_arrow_rotation(int keycode, t_data *data);
 
 /* 플러드 필 알고리즘 */
-void    solve_Dfs(char **map, int x, int y, int *status);
-int     flud_fill(char **map);
+void    solve_Dfs(char **map, int x, int y);
+int     flood_fill(char **map);
 
 /* 유틸리티 함수 */
 void    print_all(t_map *map);
 int     ft_arraylen(char **array);
 void    ft_free_array(char **array);
-void    load_textures(t_data *data);
 void    init_p(t_two_coordi_node p, int x, int y, int color);
 void    find_obj(t_data *data);
+void solve_Dfs2(char **map, int x, int y);
 
 /* 라인 그리기 함수 */
 void    draw_line_to_image(t_data *data, int x1, int y1, int x2, int y2, int color);
@@ -114,9 +116,7 @@ void    draw_single_ray(t_data *data, double ray_angle);
 void    draw_map_from_array(t_data *data);
 
 /* 3D 렌더링 관련 함수 */
-void    draw_floor_ceiling(t_data *data);
-void    draw_ceiling(t_data *data);
-void    draw_floor(t_data *data);
+void draw_floor_ceiling(t_data *data);
 void    draw_walls_3d(t_data *data);
 void    correct_ray_distance(double *corrected_dist, double ray_angle, t_data *data);
 int     calculate_wall_height(t_data *data, double corrected_dist);

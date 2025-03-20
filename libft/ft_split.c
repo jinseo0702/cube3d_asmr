@@ -65,7 +65,8 @@ static char	*ft_save(const char *s, char c)
 	i = 0;
 	str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!str)
-		return (NULL);
+		exit(1);
+		// return (NULL);
 	while (i < len)
 	{
 		str[i] = s[i];
@@ -87,7 +88,8 @@ char	**ft_split(char const *s, char c)
 	stri = 0;
 	str = (char **)malloc(sizeof(char *) * (cnt + 1));
 	if (!str)
-		return (NULL);
+		exit(1);
+		// return (NULL);
 	while (s[i])
 	{
 		if ((i == 0 && s[i] != c) || (s[i] != c && s[i - 1] == c && i != 0))

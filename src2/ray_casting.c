@@ -45,7 +45,6 @@ void calculate_delta_dist(t_ray *ray)
         ray->delta_dist_x = 1e30;
     else
         ray->delta_dist_x = fabs(1 / ray->dir_x);
-    
     if (ray->dir_y == 0)
         ray->delta_dist_y = 1e30;
     else

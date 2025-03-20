@@ -29,7 +29,6 @@ typedef struct s_two_coordi_node
 {
     double x;      // 소수점 위치를 위해 double로 변경
     double y;      // 소수점 위치를 위해 double로 변경
-    int color;
     char c;
     double dir;    // 플레이어 방향 (라디안) 추가
 }               t_two_coordi_node;
@@ -89,21 +88,11 @@ typedef struct  s_data
     void    *win;       //mlx win 함수를 쓰기위한 void 값
     int						width;      //화면 자체의 길이
 	int						height;     //화면 자체의 높이
-    int     x_offset;
-    int     y_offset;
-    double ray_angle;
-    double ray_len;
     double fov;
-    int ray_count;
-    int view_mode;      // 화면 모드 (0: 2D 맵, 1: 3D 뷰)
     t_map   map;
     t_allimg   img;            //이미지를 넣을 때 필요한 구조체
     t_two_coordi_node cor;//초기화 함수 없음
     t_ray ray;
-    void    *north;
-    void    *south;
-    void    *west;
-    void    *east;
     t_allimg tex_n;     // 북쪽 텍스처
     t_allimg tex_s;     // 남쪽 텍스처
     t_allimg tex_w;     // 서쪽 텍스처

@@ -18,18 +18,6 @@ int is_valid_map_char(char c)
     return (ft_isinstr(c, "01NSWE ") != 0);
 }
 
-// 공백만 있는지 검사 함수
-int has_non_space_char(char *str)
-{
-    int idx;
-    
-    idx = -1;
-    while (str[++idx])
-        if (!ft_isspace(str[idx]))
-            return (1);
-    return (0);
-}
-
 // 맵 라인 복사 및 처리 함수
 void copy_and_process_map_line(t_map *map_data, char *str)
 {
@@ -49,7 +37,7 @@ void copy_and_process_map_line(t_map *map_data, char *str)
 }
 
 // 맵 라인 유효성 검사 함수
-int validate_map_line(char *str)
+void validate_map_line(char *str)
 {
     int idx;
     
@@ -59,17 +47,15 @@ int validate_map_line(char *str)
         if (!is_valid_map_char(str[idx]))
         {
             printf("Error : %c is not correct format in map\n", str[idx]);
-            return (0);
+            exit(1);
         }
     }
-    return (1);
 }
 
 // 맵 라인이 올바른지 검사하는 메인 함수
-void is_right_map(char *str, t_map *map_data, t_data *data)
+void is_right_map(char *str, t_map *map_data)
 {
-    if (!validate_map_line(str))
-        data->status -= 1;
+    validate_map_line(str);
     copy_and_process_map_line(map_data, str);
     map_data->map_height++;
 }

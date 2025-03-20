@@ -23,7 +23,6 @@ SRC = src2/main.c \
       src2/ray_dda.c \
       src2/render_walls.c \
       src2/render_fc.c \
-      src2/ray_viz.c \
       src2/texture_utils.c \
       src2/texture_render.c \
       src2/line_draw.c \

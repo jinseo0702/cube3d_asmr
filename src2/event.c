@@ -32,16 +32,15 @@ int ft_exit_handling(void *param)
 
 void update_view(t_data *data)
 {
-	if (data->view_mode)
 		render_3d(data);
 }
 
 int handle_movement_keys(int keycode, t_data *data)
 {
 	if (keycode == KEY_UP || keycode == KEY_W)
-		move_player_forward(data);
+		move_player(data, KEY_UP);
 	else if (keycode == KEY_DOWN || keycode == KEY_S)
-		move_player_backward(data);
+		move_player(data, KEY_DOWN);
 	else if (keycode == KEY_LEFT || keycode == KEY_A)
 		rotate_player(data, -1);
 	else if (keycode == KEY_RIGHT || keycode == KEY_D)
@@ -55,13 +54,8 @@ int handle_movement_keys(int keycode, t_data *data)
 int ft_key_handling(int keycode, t_data *data)
 {
 	if (keycode == KEY_ESCAPE)
-	{
 		ft_exit_handling(data);
-	}
 	else if (handle_movement_keys(keycode, data))
-	{
-		update_view(data);
-	}
-
+		render_3d(data);
 	return (0);
 }

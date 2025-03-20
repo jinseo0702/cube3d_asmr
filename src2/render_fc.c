@@ -14,50 +14,29 @@
 
 void draw_floor_ceiling(t_data *data)
 {
-    draw_ceiling(data);
-    draw_floor(data);
-}
-
-void draw_ceiling(t_data *data)
-{
     int x;
     int y;
     char *dst;
+    int color;
 
     y = 0;
-    while (y < data->height / 2)
-    {
-        x = 0;
-        while (x < data->width)
-        {
-            dst = data->img.buffer + (y * data->img.line_bytes) 
-                + (x * (data->img.pixel_bits / 8));
-            *(unsigned int *)dst = data->map.C;
-            x++;
-        }
-        y++;
-    }
-}
-
-void draw_floor(t_data *data)
-{
-    int x;
-    int y;
-    char *dst;
-
-    y = data->height / 2;
     while (y < data->height)
     {
+        if (y < (data->height / 2))
+            color = data->map.C;
+        else
+            color = data->map.F;
         x = 0;
         while (x < data->width)
         {
             dst = data->img.buffer + (y * data->img.line_bytes) 
                 + (x * (data->img.pixel_bits / 8));
-            *(unsigned int *)dst = data->map.F;
+            *(unsigned int *)dst = color;
             x++;
         }
         y++;
     }
+    
 }
 
 void init_player_direction(t_data *data)
@@ -78,7 +57,6 @@ void find_obj(t_data *data)
     int y;
     static int cnt;
     
-    data->cor.color = 0xFF0000;
     y = -1;
     while (++y < data->map.map_height)
     {
@@ -91,9 +69,28 @@ void find_obj(t_data *data)
                 data->cor.x = x;
                 data->cor.y = y;
                 cnt++;
-                if (cnt > 1)
-                    data->status -= 1;
             }
         }
     }
+    if (cnt > 1 || cnt == 0)
+    {
+        printf("Chrater is only one! Check again!\n");
+        exit(1);
+    }
+    solve_Dfs2(data->map.map, data->cor.y, data->cor.x);
+}
+
+void solve_Dfs2(char **map, int x, int y)
+{
+    if (map[x][y] == 'X')
+    {
+        printf("Error  Map style is not Good!");
+        exit (1);
+    }
+    else if(map[x][y] == '2' || map[x][y] == '1')
+        return ;
+    solve_Dfs(map, (x - 1), y);
+    solve_Dfs(map, (x + 1), y);
+    solve_Dfs(map, x, (y - 1));
+    solve_Dfs(map, x, (y + 1));
 }

@@ -18,23 +18,16 @@ int main(int argc, char **argv)
 
     if (check_args(argc, argv, &data) == 0)
         return (1);
-
     init_mlx(&data);
     init_cub3d_program(&data);
     find_obj(&data);
     init_player_direction(&data);
-    
     init_window(&data);
     init_image(&data);
-    load_textures(&data);
-    
-    data.view_mode = 1;
-    
-    update_view(&data);
+    init_textures(&data);
+    render_3d(&data);
     setup_events(&data);
-    
     mlx_loop(data.mlx);
-    
     return (0);
 }
 
@@ -43,16 +36,13 @@ int check_args(int argc, char **argv, t_data *data)
     if (argc != 2)
     {
         printf("Error check argument count\n");
-        return (0);
+        return (FALSE);
     }
-
-    if (!map_parsing(argv[1], data))
-    {
-        printf("Error\n맵 파싱에 실패했습니다.\n");
-        return (0);
-    }
-    
-    return (1);
+    if (!map_check(argv[1], data))
+        return (FALSE);
+    if (!insert_data(&data->map, argv[1]))
+        return (FALSE);
+    return (TRUE);
 }
 
 void init_mlx(t_data *data)
@@ -60,16 +50,13 @@ void init_mlx(t_data *data)
     data->mlx = mlx_init();
     if (!data->mlx)
     {
-        printf("Mlx Init Failed ");
+        printf("Mlx Init Failed!");
         exit(1);
     }
 }
 
 void init_window(t_data *data)
-{
-    data->width = 800;
-    data->height = 600;
-    
+{   
     data->win = mlx_new_window(data->mlx, data->width, data->height, "Cub3D");
     if (!data->win)
     {

@@ -13,11 +13,13 @@
 #include "../include/cub3d.h"
 
 // RGB 값 유효성 검사 함수
-int validate_rgb(int r, int g, int b)
+void validate_rgb(int r, int g, int b)
 {
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
-        return (0);
-    return (1);
+    {
+        printf("Check range is not cool check again\n");
+        exit(1);
+    }
 }
 
 // RGB 문자열 분리 함수
@@ -26,11 +28,11 @@ char **split_rgb_parts(char *color_str)
     char **rgb;
     
     rgb = ft_split(color_str, ',');
-    if (!rgb || ft_arraylen(rgb) != 3)
+    if (ft_arraylen(rgb) != 3)
     {
-        if (rgb)
-            ft_free_array(rgb);
-        return (NULL);
+        ft_free_array(rgb);
+        printf("Check color Syntex!\n");
+        exit(1);
     }
     return (rgb);
 }
@@ -40,12 +42,12 @@ char **split_color_line(char *line)
 {
     char **parts;
     
-    parts = ft_split(line, ' ');
-    if (!parts || ft_arraylen(parts) < 2)
+    parts = ft_split(line, ' ');    
+    if (ft_arraylen(parts) != 2)
     {
-        if (parts)
-            ft_free_array(parts);
-        return (NULL);
+        ft_free_array(parts);
+        printf("Check color Syntex!\n");
+        exit(1);
     }
     return (parts);
 }
@@ -66,23 +68,12 @@ int parse_color(char *line)
     char **rgb;
 
     parts = split_color_line(line);
-    if (!parts)
-        return (0x000000);
-
     rgb = split_rgb_parts(parts[1]);
     ft_free_array(parts);
-
-    if (!rgb)
-        return (0x000000);
-
     r = ft_atoi(rgb[0]);
     g = ft_atoi(rgb[1]);
     b = ft_atoi(rgb[2]);
-
     ft_free_array(rgb);
-
-    if (!validate_rgb(r, g, b))
-        return (0x000000);
-
+    validate_rgb(r, g, b);
     return (create_color(r, g, b));
 }
