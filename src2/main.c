@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     init_window(&data);
     init_image(&data);
     init_textures(&data);
-    render_3d(&data);
+    render_3d(&data);//지금 부터 우리가 해야할 일 !!! 과연 레이캐스팅이란 무었인가!
     setup_events(&data);
     mlx_loop(data.mlx);
     return (0);

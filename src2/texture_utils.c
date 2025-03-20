@@ -38,7 +38,6 @@ void calculate_wall_bounds(int wall_height, t_data *data,
     *draw_start = -wall_height / 2 + data->height / 2;
     if (*draw_start < 0)
         *draw_start = 0;
-
     *draw_end = wall_height / 2 + data->height / 2;
     if (*draw_end >= data->height)
         *draw_end = data->height - 1;

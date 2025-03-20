@@ -56,20 +56,6 @@ int calculate_wall_height(t_data *data, double corrected_dist)
 void render_3d(t_data *data)
 {
     draw_floor_ceiling(data);
-    draw_walls_3d(data);
+    draw_walls_3d(data);//이부분
     mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
-}
-
-double get_wall_x(t_data *data, t_ray *ray)
-{
-    double wall_x;
-    
-    if (ray->side == 0)
-        wall_x = data->cor.y + ray->perp_wall_dist * ray->dir_y;
-    else
-        wall_x = data->cor.x + ray->perp_wall_dist * ray->dir_x;
-    
-    wall_x -= floor(wall_x);
-    
-    return (wall_x);
 }
