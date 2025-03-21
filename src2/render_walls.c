@@ -48,31 +48,33 @@ void draw_walls_3d(t_data *data)
     while (x < data->width) // 화면의 모든 픽셀을 대상으로 광선을 쏜다.
     {
         ray = cast_single_ray(data, ray_angle); // 광선을 쏘고, 벽과의 충돌을 계산하는 함수
-        process_wall_slice(data, x, &ray); // 계산된 데이터를 바탕으로 벽을 그리는 함수
+        process_wall_slice(data, x, &ray, ray_angle); // 계산된 데이터를 바탕으로 벽을 그리는 함수
         ray_angle += step; // 각 광선의 간격을 설정한 후에 다음 광선 각도로 이동, 그러니까 각 픽셀 하나당 얼마만큼의 각도를 돌려서 광선을 쏠지
         x++; // 다음 x 좌표로 이동한다.
     }
 }
 
-void process_wall_slice(t_data *data, int x, t_ray *ray) // 최적화용 추가함수 입니다 25줄 맞추기용
+void process_wall_slice(t_data *data, int x, t_ray *ray, double ray_angle)
 {
-    double corrected_dist; // 보정된 벽까지의 거리
-    int wall_height; // 계산된 벽의 높이
+    double corrected_dist;
+    int wall_height;
 
-    corrected_dist = correct_ray_distance(ray->perp_wall_dist, ray->angle, data); // 화면 왜곡(Fish Eye) 보정
-    wall_height = calculate_wall_height(data, corrected_dist); //  벽까지 거리가 가까우면 크고, 멀면 작게 벽 높이를 계산하는 함수
-    draw_textured_wall(data, x, *ray, wall_height); // 벽을 그리는 함수
+    corrected_dist = correct_ray_distance(ray->perp_wall_dist, ray_angle, data);
+    wall_height = calculate_wall_height(data, corrected_dist);
+    draw_textured_wall(data, x, *ray, wall_height);
 }
 
-void correct_ray_distance(double *corrected_dist, double ray_angle, t_data *data)
+double correct_ray_distance(double corrected_dist, double ray_angle, t_data *data)
 {
     double correction; //거리 보정을 위한 변수
     
     correction = cos(ray_angle - data->cor.dir); //거리 왜곡을 보정하는 값 계산
-    *corrected_dist = *corrected_dist * correction; //실제 벽 거리를 보정
+    corrected_dist = corrected_dist * correction; //실제 벽 거리를 보정
     
-    if (*corrected_dist < 0.1)
-        *corrected_dist = 0.1
+    if (corrected_dist < 0.1)
+        return (corrected_dist = 0.1);
+    else
+        return corrected_dist;
 }
 
 int calculate_wall_height(t_data *data, double corrected_dist)

@@ -54,6 +54,6 @@ void calculate_delta_dist(t_ray *ray)
 
 void calculate_step_side_dist(t_ray *ray, t_data *game) // 추가함수 입니다
 {
-    calculate_step_x(ray, game); // X 방향 이동 거리를 계산하는 함수
-    calculate_step_y(ray, game); // Y 방향 이동 거리를 계산하는 함수
+    calculate_step_side_dist_x(ray, game); // X 방향 이동 거리를 계산하는 함수
+    calculate_step_side_dist_y(ray, game); // Y 방향 이동 거리를 계산하는 함수
 }

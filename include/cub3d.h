@@ -84,20 +84,26 @@ t_ray   cast_single_ray(t_data *game, double angle);
 void    init_ray_direction(t_ray *ray, double angle);
 void    init_ray_map_pos(t_ray *ray, t_data *game);
 void    calculate_delta_dist(t_ray *ray);
+void    calculate_step_side_dist(t_ray *ray, t_data *game); // 추가함수 입니다
 void    calculate_step_side_dist_x(t_ray *ray, t_data *game);
 void    calculate_step_side_dist_y(t_ray *ray, t_data *game);
 int     check_map_bounds(t_ray *ray, t_data *game);
 int     check_wall_hit(t_ray *ray, t_data *game);
 void    perform_dda(t_ray *ray, t_data *game);
 void    calculate_wall_distance(t_ray *ray, t_data *game);
+int     check_wall_collision(t_ray *ray, char **map, int width, int height);
+void    step_to_next_grid(t_ray *ray);
+
 
 /* 3D 렌더링 관련 함수 */
 void    draw_floor_ceiling(t_data *data);
 void    draw_walls_3d(t_data *data);
-void    correct_ray_distance(double *corrected_dist, double ray_angle, t_data *data);
+double correct_ray_distance(double corrected_dist, double ray_angle, t_data *data);
 int     calculate_wall_height(t_data *data, double corrected_dist);
 void    render_3d(t_data *data);
 void    init_player_direction(t_data *data);
+void process_wall_slice(t_data *data, int x, t_ray *ray, double ray_angle);
+
 
 /* 텍스처 관련 함수 */
 void    init_textures(t_data *data);
@@ -108,5 +114,7 @@ void    calculate_wall_bounds(int wall_height, t_data *data, int *draw_start, in
 t_allimg *select_texture_x_side(t_ray ray, t_data *data);
 t_allimg *select_texture_y_side(t_ray ray, t_data *data);
 t_allimg *select_texture(t_ray ray, t_data *data);
+int get_texture_color(t_wall_tex *tex, double tex_pos); // 최적화 하면서 추가 된 함수
+
 
 #endif

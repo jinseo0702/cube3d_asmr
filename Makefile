@@ -19,6 +19,7 @@ SRC = src2/main.c \
       src2/event.c \
       src2/player_movement.c \
       src2/ray_casting.c \
+      src2/ray_casting_util.c \
       src2/ray_dda.c \
       src2/render_walls.c \
       src2/render_fc.c \
