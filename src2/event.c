@@ -14,7 +14,8 @@
 
 void setup_events(t_data *data)
 {
-	mlx_key_hook(data->win, ft_key_handling, data);
+	// mlx_key_hook(data->win, ft_key_handling, data);
+	mlx_hook(data->win, 2, 1L<<0, ft_key_handling, data);
 	mlx_hook(data->win, 17, 0, ft_exit_handling, data);
 }
 
@@ -28,11 +29,6 @@ int ft_exit_handling(void *param)
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	exit(0);
-}
-
-void update_view(t_data *data)
-{
-		render_3d(data);
 }
 
 int handle_movement_keys(int keycode, t_data *data)

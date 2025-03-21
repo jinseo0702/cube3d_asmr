@@ -26,27 +26,15 @@ void calculate_step_side_dist_y(t_ray *ray, t_data *game)
     }
 }
 
-int check_map_bounds(t_ray *ray, t_data *game)
-{
-    if (ray->map_y < 0 || ray->map_y >= game->map.map_height || 
-        ray->map_x < 0 || ray->map_x >= game->map.map_width)
-    {
-        ray->hit = 1;
-        ray->perp_wall_dist = 20.0;
-        return (1);
-    }
-    return (0);
-}
-
 int check_wall_hit(t_ray *ray, t_data *game)
 {
     if (game->map.map[ray->map_y][ray->map_x] == '1' || 
         game->map.map[ray->map_y][ray->map_x] == 'X')
     {
         ray->hit = 1;
-        return (1);
+        return (TRUE);
     }
-    return (0);
+    return (FALSE);
 }
 
 void perform_dda(t_ray *ray, t_data *game)
@@ -66,19 +54,10 @@ void perform_dda(t_ray *ray, t_data *game)
             ray->map_y += ray->step_y;
             ray->side = 1;
         }
-        
-        if (check_map_bounds(ray, game) == 1)
-            break;
         check_wall_hit(ray, game);
     }
-}
-
-void calculate_wall_distance(t_ray *ray, t_data *game)
-{
     if (ray->side == 0)
-        ray->perp_wall_dist = fabs((ray->map_x - game->cor.x 
-            + (1 - ray->step_x) / 2) / ray->dir_x);
+        ray->perp_wall_dist = (ray->map_x - game->cor.x + (1 - ray->step_x) / 2) / ray->dir_x;
     else
-        ray->perp_wall_dist = fabs((ray->map_y - game->cor.y 
-            + (1 - ray->step_y) / 2) / ray->dir_y);
+        ray->perp_wall_dist = (ray->map_y - game->cor.y + (1 - ray->step_y) / 2) / ray->dir_y;
 }

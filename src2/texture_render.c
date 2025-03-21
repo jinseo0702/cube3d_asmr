@@ -12,14 +12,15 @@
 
 #include "../include/cub3d.h"
 
-void draw_textured_wall(t_data *data, int x, t_ray ray, int wall_height)
+void draw_textured_wall(t_data *data, int x, t_ray ray)
 {
     t_wall_tex tex;
+    t_allimg *tex_img;
+    int wall_height;
     int draw_start;
     int draw_end;
-    t_allimg *tex_img;
     
-    calculate_wall_bounds(wall_height, data, &draw_start, &draw_end);
+    calculate_wall_bounds(&wall_height, &ray ,&draw_start, &draw_end);
     tex_img = select_texture(ray, data);
     
     tex.buffer = tex_img->buffer;
@@ -43,8 +44,8 @@ void draw_wall_line(t_data *data, int x, int start, int end, t_wall_tex tex)
     
     step = (double)TEX_HEIGHT / tex.height;
     tex_pos = (start - data->height / 2 + tex.height / 2) * step;
-    
     y = start;
+    printf("start %d end %d cnt == %d \n ", start, end, x);
     while (y < end)
     {
         tex_y = (int)tex_pos & (TEX_HEIGHT - 1);
@@ -52,7 +53,6 @@ void draw_wall_line(t_data *data, int x, int start, int end, t_wall_tex tex)
         
         src = tex.buffer + (tex_y * tex.line_bytes + tex.tex_x * (tex.pixel_bits / 8));
         color = *(unsigned int *)src;
-        
         if (y >= 0 && y < data->height && x >= 0 && x < data->width)
         {
             dst = data->img.buffer + (y * data->img.line_bytes + x * (data->img.pixel_bits / 8));

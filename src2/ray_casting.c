@@ -22,8 +22,6 @@ t_ray cast_single_ray(t_data *game, double angle)
     calculate_step_side_dist_x(&ray, game);
     calculate_step_side_dist_y(&ray, game);
     perform_dda(&ray, game);
-    calculate_wall_distance(&ray, game);
-    
     return (ray);
 }
 

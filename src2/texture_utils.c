@@ -32,15 +32,15 @@ int get_tex_x(t_data *data, t_ray *ray)
     return (tex_x);
 }
 
-void calculate_wall_bounds(int wall_height, t_data *data, 
-                          int *draw_start, int *draw_end)
+void calculate_wall_bounds(int *wall_height, t_ray *ray, int *draw_start, int *draw_end)
 {
-    *draw_start = -wall_height / 2 + data->height / 2;
+    *wall_height = (int)(1080 / ray->perp_wall_dist);
+    *draw_start = -*wall_height / 2 + 1080 / 2;
     if (*draw_start < 0)
         *draw_start = 0;
-    *draw_end = wall_height / 2 + data->height / 2;
-    if (*draw_end >= data->height)
-        *draw_end = data->height - 1;
+    *draw_end = *wall_height / 2 + 1080 / 2;
+    if (*draw_end >= 1080)
+        *draw_end = 1080 - 1;
 }
 
 t_allimg *select_texture_x_side(t_ray ray, t_data *data)

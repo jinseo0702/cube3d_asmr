@@ -17,40 +17,17 @@ void draw_walls_3d(t_data *data)
     double ray_angle;
     int x;
     t_ray ray;
-    int wall_height;
-    double corrected_dist;
     
     ray_angle = data->cor.dir - (data->fov / 2);//왼쪽 30도 부터 광선을 쏜다.
     x = 0;
     while (x < data->width)
     {
         ray = cast_single_ray(data, ray_angle);
-        corrected_dist = ray.perp_wall_dist;
-        correct_ray_distance(&corrected_dist, ray_angle, data);
-        wall_height = calculate_wall_height(data, corrected_dist);
-        draw_textured_wall(data, x, ray, wall_height);
+        ray.perp_wall_dist *= cos(ray_angle - data->cor.dir);
+        draw_textured_wall(data, x, ray);
         ray_angle += data->fov / data->width;
         x++;
     }
-}
-
-void correct_ray_distance(double *corrected_dist, double ray_angle, t_data *data)
-{
-    double correction;
-    
-    correction = cos(ray_angle - data->cor.dir);
-    *corrected_dist = *corrected_dist * correction;
-    
-    if (*corrected_dist < 0.1)
-        *corrected_dist = 0.1;
-}
-
-int calculate_wall_height(t_data *data, double corrected_dist)
-{
-    int wall_height;
-    
-    wall_height = (int)(data->height / corrected_dist * 0.5);
-    return (wall_height);
 }
 
 void render_3d(t_data *data)
