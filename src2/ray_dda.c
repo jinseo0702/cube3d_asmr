@@ -11,21 +11,7 @@
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
-
-void calculate_step_side_dist_y(t_ray *ray, t_data *game)
-{
-    if (ray->dir_y < 0)
-    {
-        ray->step_y = -1;
-        ray->side_dist_y = (game->cor.y - ray->map_y) * ray->delta_dist_y;
-    }
-    else
-    {
-        ray->step_y = 1;
-        ray->side_dist_y = (ray->map_y + 1.0 - game->cor.y) * ray->delta_dist_y;
-    }
-}
-
+/*
 int check_map_bounds(t_ray *ray, t_data *game)
 {
     if (ray->map_y < 0 || ray->map_y >= game->map.map_height || 
@@ -48,28 +34,80 @@ int check_wall_hit(t_ray *ray, t_data *game)
     }
     return (0);
 }
-
+*/
+/*
 void perform_dda(t_ray *ray, t_data *game)
 {
     ray->hit = 0;
-    while (ray->hit == 0)
+    while (ray->hit == 0) //벽을 만날 때까지 한 칸 씩 이동하는 브레젠햄 알고리즘
     {
-        if (ray->side_dist_x < ray->side_dist_y)
+        if (ray->side_dist_x < ray->side_dist_y) // x방향이 더 가까울때
         {
             ray->side_dist_x += ray->delta_dist_x;
             ray->map_x += ray->step_x;
             ray->side = 0;
         }
-        else
+        else // y방향이 더 가까울 때
         {
             ray->side_dist_y += ray->delta_dist_y;
             ray->map_y += ray->step_y;
             ray->side = 1;
         }
         
-        if (check_map_bounds(ray, game) == 1)
+        if (check_map_bounds(ray, game) == 1) //맵 경계를 넘게되면 종료
             break;
-        check_wall_hit(ray, game);
+        check_wall_hit(ray, game); // 벽을 만났는지 확인
+    }
+}
+*/
+
+void perform_dda(t_ray *ray, t_data *game)
+{
+    char **map = game->map.map; // 게임 맵 데이터를 가져옴
+    int width = game->map.map_width; // 맵의 가로 길이
+    int height = game->map.map_height; // 맵의 세로 길이
+
+    ray->hit = 0; // 벽 충돌 여부 초기화
+    while (!ray->hit) // 벽을 만날 때까지 반복
+    {
+        step_to_next_grid(ray); // 다음 그리드로 이동
+        if (check_wall_collision(ray, map, width, height)) // 벽에 부딪혔는지 검사
+            ray->hit = 1; // 벽을 만났으면 종료
+    }
+}
+
+int check_wall_collision(t_ray *ray, char **map, int width, int height)
+{
+    // 맵 범위를 벗어난 경우
+    if (ray->map_x < 0 || ray->map_x >= width ||
+        ray->map_y < 0 || ray->map_y >= height)
+    {
+        ray->perp_wall_dist = 20.0; // 너무 멀리 벗어난 광선은 먼 거리로 간주
+        return (1);
+    }
+    // 벽에 부딪혔는지 확인
+    if (map[ray->map_y][ray->map_x] == '1' || 
+        map[ray->map_y][ray->map_x] == 'X')
+    {
+        return (1);
+    }
+
+    return (0);
+}
+
+void step_to_next_grid(t_ray *ray)
+{
+    if (ray->side_dist_x < ray->side_dist_y) // X축 방향이 더 가까우면
+    {
+        ray->side_dist_x += ray->delta_dist_x; // X 방향 이동 거리 업데이트
+        ray->map_x += ray->step_x; // X 좌표 업데이트
+        ray->side = 0; // X 방향 충돌 기록
+    }
+    else // Y축 방향이 더 가까우면
+    {
+        ray->side_dist_y += ray->delta_dist_y; // Y 방향 이동 거리 업데이트
+        ray->map_y += ray->step_y; // Y 좌표 업데이트
+        ray->side = 1; // Y 방향 충돌 기록
     }
 }
 

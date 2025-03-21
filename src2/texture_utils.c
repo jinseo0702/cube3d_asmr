@@ -42,7 +42,7 @@ void calculate_wall_bounds(int wall_height, t_data *data,
     if (*draw_end >= data->height)
         *draw_end = data->height - 1;
 }
-
+/*
 t_allimg *select_texture_x_side(t_ray ray, t_data *data)
 {
     if (ray.dir_x > 0)
@@ -65,4 +65,22 @@ t_allimg *select_texture(t_ray ray, t_data *data)
         return (select_texture_x_side(ray, data));
     else
         return (select_texture_y_side(ray, data));
+}
+*/
+t_allimg *select_texture(t_ray ray, t_data *data)  //그냥 하나로 만들어봤습니다.
+{
+    if (ray.side == 0)
+    {
+        if (ray.dir_x > 0)
+            return (&data->tex_e);
+        else
+            return (&data->tex_w);
+    }
+    else
+    {
+        if (ray.dir_y > 0)
+            return (&data->tex_s);
+        else
+            return (&data->tex_n);
+    }
 }
