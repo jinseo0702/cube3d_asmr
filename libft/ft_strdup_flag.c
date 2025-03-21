@@ -23,7 +23,7 @@ char	*ft_strdup_flag(const char *s, int *status)
 	{
 		*status = -1;
 		exit(1);
-		// return (NULL);
+		
 	}
 	while (*(s + i) != '\0')
 	{

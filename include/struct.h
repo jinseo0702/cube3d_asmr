@@ -1,36 +1,36 @@
 # ifndef STRUCT_H
 # define STRUCT_H
 
-// 텍스처 사이즈 정의 (파워 오브 2 값으로 설정)
+
 # define TEX_WIDTH 64
 # define TEX_HEIGHT 64
 
 typedef struct s_allimg
 {
-	void					*img;   //이미지
-    char					*buffer;    //mlx_get_data_addr 이 함수 쓸때 저장할거
-	int						width;      //이미지의 길이
-	int						height;     //이미지의 높이
-    int						pixel_bits; //mlx_new_image 이 함수 쓸때, 사용할 픽셀 비트
-	int						line_bytes; //mlx_new_image 이 함수 쓸 때, 사용한 라인의 바이트
-    int						endian;     //mlx_new_image 이 함수 쓸 때, 사용할 엔디안 값
+	void					*img;   
+    char					*buffer;    
+	int						width;      
+	int						height;     
+    int						pixel_bits; 
+	int						line_bytes; 
+    int						endian;     
 }			t_allimg;
 
 typedef struct s_wall_tex
 {
-	char	*buffer;    // 텍스처 픽셀 데이터
-	int		line_bytes; // 한 라인의 바이트 수
-	int		pixel_bits; // 픽셀 비트 수
-	int		tex_x;      // 텍스처 X 좌표
-	int		height;     // 벽의 높이
+	char	*buffer;    
+	int		line_bytes; 
+	int		pixel_bits; 
+	int		tex_x;      
+	int		height;     
 }			t_wall_tex;
 
 typedef struct s_two_coordi_node
 {
-    double x;      // 소수점 위치를 위해 double로 변경
-    double y;      // 소수점 위치를 위해 double로 변경
+    double x;      
+    double y;      
     char c;
-    double dir;    // 플레이어 방향 (라디안) 추가
+    double dir;    
 }               t_two_coordi_node;
 
 typedef struct s_draw_func
@@ -48,8 +48,8 @@ typedef struct s_map
     int fd;
     int high;
     int map_width;
-    int map_height;//이 아래에 status를 넣을지 말지 고민중 입니다.
-    int exf;//exception_falg;
+    int map_height;
+    int exf;
     char *NO;
     char *SO;
     char *WE;
@@ -61,42 +61,42 @@ typedef struct s_map
 
 typedef struct s_ray
 {
-    double dir_x;        // 광선의 X 방향 (코사인 값)
-    double dir_y;        // 광선의 Y 방향 (사인 값)
+    double dir_x;        
+    double dir_y;        
     
-    int map_x;           // 광선이 현재 지나가고 있는 맵의 X 좌표
-    int map_y;           // 광선이 현재 지나가고 있는 맵의 Y 좌표
+    int map_x;           
+    int map_y;           
     
-    int step_x;          // X 방향으로 이동할 때 +1 또는 -1
-    int step_y;          // Y 방향으로 이동할 때 +1 또는 -1
+    int step_x;          
+    int step_y;          
     
-    double side_dist_x;  // 현재 위치에서 다음 X 격자선까지의 거리
-    double side_dist_y;  // 현재 위치에서 다음 Y 격자선까지의 거리
+    double side_dist_x;  
+    double side_dist_y;  
     
-    double delta_dist_x; // X 격자선 사이의 거리
-    double delta_dist_y; // Y 격자선 사이의 거리
+    double delta_dist_x; 
+    double delta_dist_y; 
     
-    int hit;             // 벽에 부딪혔는지 여부 (0: 아니오, 1: 예)
-    int side;            // 부딪힌 벽이 어느 면인지 (0: X면, 1: Y면)
+    int hit;             
+    int side;            
     
-    double perp_wall_dist; // 벽까지의 수직 거리 (화면의 깊이를 계산할 때 사용)
+    double perp_wall_dist; 
 } t_ray;
 
 typedef struct  s_data 
 {
-    void    *mlx;       //mlx 함수를 쓰기위한 값
-    void    *win;       //mlx win 함수를 쓰기위한 void 값
-    int						width;      //화면 자체의 길이
-	int						height;     //화면 자체의 높이
+    void    *mlx;       
+    void    *win;       
+    int						width;      
+	int						height;     
     double fov;
     t_map   map;
-    t_allimg   img;            //이미지를 넣을 때 필요한 구조체
-    t_two_coordi_node cor;//초기화 함수 없음
+    t_allimg   img;            
+    t_two_coordi_node cor;
     t_ray ray;
-    t_allimg tex_n;     // 북쪽 텍스처
-    t_allimg tex_s;     // 남쪽 텍스처
-    t_allimg tex_w;     // 서쪽 텍스처
-    t_allimg tex_e;     // 동쪽 텍스처
+    t_allimg tex_n;     
+    t_allimg tex_s;     
+    t_allimg tex_w;     
+    t_allimg tex_e;     
     int status;
 }               t_data;
 

@@ -6,7 +6,7 @@
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 21:57:14 by jinseo            #+#    #+#             */
-/*   Updated: 2025/03/13 21:59:18 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/21 21:56:14 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void setup_events(t_data *data)
 {
-	mlx_key_hook(data->win, ft_key_handling, data);
+	mlx_hook(data->win, 2, 1L<<0, ft_key_handling, data);
 	mlx_hook(data->win, 17, 0, ft_exit_handling, data);
 }
 
@@ -32,7 +32,7 @@ int ft_exit_handling(void *param)
 
 void update_view(t_data *data)
 {
-		render_3d(data);
+	render_3d(data);
 }
 
 int handle_movement_keys(int keycode, t_data *data)
@@ -47,7 +47,6 @@ int handle_movement_keys(int keycode, t_data *data)
 		rotate_player(data, 1);
 	else
 		return (0);
-
 	return (1);
 }
 

@@ -21,7 +21,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		dst = (char *)ft_calloc(start + len + 1, sizeof(char));
 		if (!dst)
 			exit(1);
-			// return (NULL);
+			
 		return (dst);
 	}
 	dst = (char *)ft_calloc(start + len + 1, sizeof(char));

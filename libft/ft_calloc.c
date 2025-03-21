@@ -20,11 +20,11 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	cmp = nmemb * size;
 	if (!cmp && cmp / nmemb != size)
 		exit(1);
-		// return (NULL);
+		
 	reptr = (void *)malloc(size * nmemb);
 	if (!reptr)
 		exit(1);
-		// return (NULL);
+		
 	ft_memset(reptr, 0, size * nmemb);
 	return (reptr);
 }

@@ -43,7 +43,7 @@ int     check_size(t_map *map_data);
 int     check_arg(char *str);
 int     dup_info(char *str, t_map *map_data);
 void     is_right_map(char *str, t_map *map_data);
-int     insert_data(t_map *map_data, char *map);//수정 요망 
+int     insert_data(t_map *map_data, char *map);
 
 /* 맵 검증 함수 */
 int     is_valid_map_char(char c);
@@ -69,7 +69,7 @@ void move_player(t_data *data, int flag);
 void    rotate_player(t_data *data, int direction);
 
 /* 플러드 필 알고리즘 */
-void    solve_Dfs(char **map, int x, int y);
+void    solve_dfs(char **map, int x, int y);
 int     flood_fill(char **map);
 
 /* 유틸리티 함수 */
@@ -84,7 +84,7 @@ t_ray   cast_single_ray(t_data *game, double angle);
 void    init_ray_direction(t_ray *ray, double angle);
 void    init_ray_map_pos(t_ray *ray, t_data *game);
 void    calculate_delta_dist(t_ray *ray);
-void    calculate_step_side_dist(t_ray *ray, t_data *game); // 추가함수 입니다
+void    calculate_step_side_dist(t_ray *ray, t_data *game); 
 void    calculate_step_side_dist_x(t_ray *ray, t_data *game);
 void    calculate_step_side_dist_y(t_ray *ray, t_data *game);
 int     check_map_bounds(t_ray *ray, t_data *game);
@@ -114,7 +114,7 @@ void    calculate_wall_bounds(int wall_height, t_data *data, int *draw_start, in
 t_allimg *select_texture_x_side(t_ray ray, t_data *data);
 t_allimg *select_texture_y_side(t_ray ray, t_data *data);
 t_allimg *select_texture(t_ray ray, t_data *data);
-int get_texture_color(t_wall_tex *tex, double tex_pos); // 최적화 하면서 추가 된 함수
+int get_texture_color(t_wall_tex *tex, double tex_pos); 
 
 
 #endif
