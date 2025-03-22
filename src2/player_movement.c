@@ -12,10 +12,10 @@
 
 #include "../include/cub3d.h"
 
-void move_player(t_data *data, int flag)
+void	move_player(t_data *data, int flag)
 {
-	double new_x;
-	double new_y;
+	double	new_x;
+	double	new_y;
 
 	if (flag == KEY_UP)
 	{
@@ -27,7 +27,7 @@ void move_player(t_data *data, int flag)
 		new_x = data->cor.x - cos(data->cor.dir) * 0.1;
 		new_y = data->cor.y - sin(data->cor.dir) * 0.1;
 	}
-	if (data->map.map[(int)new_y][(int)new_x] != '1' && 
+	if (data->map.map[(int)new_y][(int)new_x] != '1' &&
 			data->map.map[(int)new_y][(int)new_x] != 'X')
 	{
 		data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
@@ -37,11 +37,9 @@ void move_player(t_data *data, int flag)
 	}
 }
 
-
-
-void rotate_player(t_data *data, int direction)
+void	rotate_player(t_data *data, int direction)
 {
-	double rotation_speed;
+	double	rotation_speed;
 
 	rotation_speed = 0.1;
 	if (direction < 0)

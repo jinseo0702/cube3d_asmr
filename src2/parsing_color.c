@@ -12,7 +12,7 @@
 
 #include "../include/cub3d.h"
 
-void validate_rgb(int r, int g, int b)
+void	validate_rgb(int r, int g, int b)
 {
 	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
 	{
@@ -21,10 +21,9 @@ void validate_rgb(int r, int g, int b)
 	}
 }
 
-
-char **split_rgb_parts(char *color_str)
+char	**split_rgb_parts(char *color_str)
 {
-	char **rgb;
+	char	**rgb;
 
 	rgb = ft_split(color_str, ',');
 	if (ft_arraylen(rgb) != 3)
@@ -36,12 +35,11 @@ char **split_rgb_parts(char *color_str)
 	return (rgb);
 }
 
-
-char **split_color_line(char *line)
+char	**split_color_line(char *line)
 {
-	char **parts;
+	char	**parts;
 
-	parts = ft_split(line, ' ');    
+	parts = ft_split(line, ' ');
 	if (ft_arraylen(parts) != 2)
 	{
 		ft_free_array(parts);
@@ -51,20 +49,18 @@ char **split_color_line(char *line)
 	return (parts);
 }
 
-
-int create_color(int r, int g, int b)
+int	create_color(int r, int g, int b)
 {
 	return ((r << 16) | (g << 8) | b);
 }
 
-
-int parse_color(char *line)
+int	parse_color(char *line)
 {
-	int r;
-	int g;
-	int b;
-	char **parts;
-	char **rgb;
+	int		r;
+	int		g;
+	int		b;
+	char	**parts;
+	char	**rgb;
 
 	parts = split_color_line(line);
 	rgb = split_rgb_parts(parts[1]);

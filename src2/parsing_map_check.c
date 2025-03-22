@@ -12,23 +12,23 @@
 
 #include "../include/cub3d.h"
 
-
-int is_valid_map_char(char c)
+int	is_valid_map_char(char c)
 {
 	return (ft_isinstr(c, "01NSWE ") != 0);
 }
 
-
-void copy_and_process_map_line(t_map *map_data, char *str)
+void	copy_and_process_map_line(t_map *map_data, char *str)
 {
-	int idx;
+	int	idx;
 
 	map_data->map[map_data->map_height] = ft_calloc(1, map_data->map_width + 2);
-	ft_memset(map_data->map[map_data->map_height], 'X', map_data->map_width + 1);
-	ft_strlcpy(&map_data->map[map_data->map_height][1], str, ft_strlen(str) + 2);
+	ft_memset(map_data->map[map_data->map_height],
+		'X', map_data->map_width + 1);
+	ft_strlcpy(&map_data->map[map_data->map_height][1],
+		str, ft_strlen(str) + 2);
 	idx = -1;
 	while (map_data->map[map_data->map_height][++idx])
-		if(ft_isspace(map_data->map[map_data->map_height][idx]))
+		if (ft_isspace(map_data->map[map_data->map_height][idx]))
 			map_data->map[map_data->map_height][idx] = 'X';
 	if ((int)ft_strlen(str) < map_data->map_width)
 		map_data->map[map_data->map_height][ft_strlen(str) + 1] = 'X';
@@ -36,10 +36,9 @@ void copy_and_process_map_line(t_map *map_data, char *str)
 		map_data->map[map_data->map_height][map_data->map_width] = 'X';
 }
 
-
-void validate_map_line(char *str)
+void	validate_map_line(char *str)
 {
-	int idx;
+	int	idx;
 
 	idx = -1;
 	while (str[++idx] && str[idx] != '\n')
@@ -52,8 +51,7 @@ void validate_map_line(char *str)
 	}
 }
 
-
-void is_right_map(char *str, t_map *map_data)
+void	is_right_map(char *str, t_map *map_data)
 {
 	validate_map_line(str);
 	copy_and_process_map_line(map_data, str);

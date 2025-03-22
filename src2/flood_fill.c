@@ -12,14 +12,14 @@
 
 #include "../include/cub3d.h"
 
-void solve_dfs(char **map, int x, int y)
+void	solve_dfs(char **map, int x, int y)
 {
 	if (map[x][y] == 'X')
 	{
 		printf("Error  Map style is not Good!");
 		exit (1);
 	}
-	else if(map[x][y] != '0')
+	else if (map[x][y] != '0')
 		return ;
 	map[x][y] += 2;
 	solve_dfs(map, (x - 1), y);
@@ -28,10 +28,10 @@ void solve_dfs(char **map, int x, int y)
 	solve_dfs(map, x, (y + 1));
 }
 
-int flood_fill(char **map)
+int	flood_fill(char **map)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	x = -1;
 	while (map[++x])
@@ -44,10 +44,9 @@ int flood_fill(char **map)
 	return (TRUE);
 }
 
-
-int ft_arraylen(char **array)
+int	ft_arraylen(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (array[i])
@@ -55,10 +54,9 @@ int ft_arraylen(char **array)
 	return (i);
 }
 
-
-void ft_free_array(char **array)
+void	ft_free_array(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (array[i])
@@ -69,8 +67,7 @@ void ft_free_array(char **array)
 	free(array);
 }
 
-
-void init_cub3d_program(t_data *data)
+void	init_cub3d_program(t_data *data)
 {
 	data->width = 1920;
 	data->height = 1080;

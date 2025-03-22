@@ -12,69 +12,67 @@
 
 #include "../include/cub3d.h"
 
-void copy_texture_path(char **dst, char *src)
+void	copy_texture_path(char **dst, char *src)
 {
-	char *find;
+	char	*find;
+	char	*ptr;
 
 	find = ft_strchr(src, '.');
 	*dst = ft_strdup(find);
-	char *ptr = ft_strchr(*dst, '\n');
+	ptr = ft_strchr(*dst, '\n');
 	if (ptr)
 		*ptr = '\0';
 }
 
-
-void handle_texture_data(char *str, t_map *map_data)
+void	handle_texture_data(char *str, t_map *map_data)
 {
 	if (ft_strncmp(str, "NO ", 3) == 0)
-		copy_texture_path(&map_data->NO, str);
+		copy_texture_path(&map_data->no, str);
 	else if (ft_strncmp(str, "SO ", 3) == 0)
-		copy_texture_path(&map_data->SO, str);
+		copy_texture_path(&map_data->so, str);
 	else if (ft_strncmp(str, "WE ", 3) == 0)
-		copy_texture_path(&map_data->WE, str);
+		copy_texture_path(&map_data->we, str);
 	else if (ft_strncmp(str, "EA ", 3) == 0)
-		copy_texture_path(&map_data->EA, str);
+		copy_texture_path(&map_data->ea, str);
 	else if (ft_strncmp(str, "F ", 2) == 0)
-		map_data->F = parse_color(str);
+		map_data->f = parse_color(str);
 	else if (ft_strncmp(str, "C ", 2) == 0)
-		map_data->C = parse_color(str);
+		map_data->c = parse_color(str);
 }
 
-
-int dup_info(char *str, t_map *map_data)
+int	dup_info(char *str, t_map *map_data)
 {
 	if (ft_onlyisspace(str) && map_data->exf > 255)
 		return (FALSE);
 	printf("%s, %d", str, map_data->exf);
 	handle_texture_data(str, map_data);
-	if(map_data->exf <= 127)
+	if (map_data->exf <= 127)
 		is_right_map(str, map_data);
 	return (TRUE);
 }
 
-
-int insert_data(t_map *map_data, char *map)
+int	insert_data(t_map *map_data, char *map)
 {
-	char *temp;
+	char	*temp;
 
 	map_data->fd = open(map, O_RDONLY);
 	if (map_data->fd < 0)
-	{
-		printf("Error Failed opne File.\n");
-		return (FALSE);
-	}
+		return (printf("Error Failed opne File.\n"), FALSE);
 	map_data->map = (char **)ft_calloc(sizeof(char *), (map_data->high));
 	map_data->map[0] = (char *)ft_calloc(sizeof(char), map_data->map_width + 2);
 	ft_memset(map_data->map[0], 'X', map_data->map_width + 1);
-	while ((temp = get_next_line(map_data->fd)))
+	temp = get_next_line(map_data->fd);
+	while (temp)
 	{
-		if(dup_info(temp, map_data) == 1 && map_data->exf^127)
+		if (dup_info(temp, map_data) == 1 && map_data->exf ^ 127)
 			map_data->exf = (map_data->exf >> 1);
 		ft_freenull(&temp);
+		temp = get_next_line(map_data->fd);
 	}
-	map_data->map[map_data->map_height] = ft_calloc(sizeof(char), 
+	map_data->map[map_data->map_height] = ft_calloc(sizeof(char),
 			map_data->map_width + 2);
-	ft_memset(map_data->map[map_data->map_height], 'X', map_data->map_width + 1);
+	ft_memset(map_data->map[map_data->map_height], 'X',
+		map_data->map_width + 1);
 	flood_fill(map_data->map);
 	print_all(map_data);
 	close(map_data->fd);

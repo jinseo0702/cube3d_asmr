@@ -12,7 +12,7 @@
 
 #include "../include/cub3d.h"
 
-void calculate_step_side_dist_x(t_ray *ray, t_data *game)
+void	calculate_step_side_dist_x(t_ray *ray, t_data *game)
 {
 	if (ray->dir_x < 0)
 	{
@@ -26,7 +26,7 @@ void calculate_step_side_dist_x(t_ray *ray, t_data *game)
 	}
 }
 
-void calculate_step_side_dist_y(t_ray *ray, t_data *game)
+void	calculate_step_side_dist_y(t_ray *ray, t_data *game)
 {
 	if (ray->dir_y < 0)
 	{

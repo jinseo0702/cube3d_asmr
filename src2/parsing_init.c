@@ -5,30 +5,30 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/13 21:57:35 by jinseo            #+#    #+#             */
+/*   created: 2025/03/13 21:57:35 by jinseo            #+#    #+#             */
 /*   Updated: 2025/03/21 21:57:04 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-void init_t_map(t_map *map_data)
+void	init_t_map(t_map *map_data)
 {
 	map_data->fd = 0;
 	map_data->high = 0;
 	map_data->map_height = 1;
 	map_data->map_width = 0;
 	map_data->exf = 0;
-	map_data->NO = NULL;
-	map_data->SO = NULL;
-	map_data->WE = NULL;
-	map_data->EA = NULL;
-	map_data->F = 0;
-	map_data->C = 0;
+	map_data->no = NULL;
+	map_data->so = NULL;
+	map_data->we = NULL;
+	map_data->ea = NULL;
+	map_data->f = 0;
+	map_data->c = 0;
 	map_data->map = NULL;
 }
 
-int map_check(char *map, t_data *data)
+int	map_check(char *map, t_data *data)
 {
 	init_t_map(&data->map);
 	if (ft_strrstr(map, ".cub", 4) == 0)
@@ -47,9 +47,9 @@ int map_check(char *map, t_data *data)
 	return (TRUE);
 }
 
-int check_arg(char *str)
+int	check_arg(char *str)
 {
-	int idx;
+	int	idx;
 
 	if (ft_strncmp(str, "NO ", 3) == 0)
 		return (1);
@@ -73,13 +73,14 @@ int check_arg(char *str)
 	}
 }
 
-int check_size(t_map *map_data)
+int	check_size(t_map *map_data)
 {
-	int cnt;
-	char *temp;
+	int		cnt;
+	char	*temp;
 
 	cnt = 6;
-	while ((temp = get_next_line(map_data->fd)))
+	temp = get_next_line(map_data->fd);
+	while (temp)
 	{
 		if (map_data->high == 0)
 			map_data->map_width = ft_strlen(temp);
@@ -92,21 +93,22 @@ int check_size(t_map *map_data)
 			printf("Error Check File Format\n");
 		ft_freenull(&temp);
 		map_data->high++;
+		temp = get_next_line(map_data->fd);
 	}
 	close(map_data->fd);
 	return (map_data->exf == 8191);
 }
 
-void print_all(t_map *map)
+void	print_all(t_map *map)
 {
-	int idx;
+	int	idx;
 
-	printf("fd == %d, high == %d, width == %d, m_high == %d \n", 
-			map->fd, map->high, map->map_width, map->map_height);
-	printf("NO is %s ", map->NO);
-	printf("SO is %s ", map->SO);
-	printf("WE is %s ", map->WE);
-	printf("EA is %s ", map->EA);
+	printf("fd == %d, high == %d, width == %d, m_high == %d \n",
+		map->fd, map->high, map->map_width, map->map_height);
+	printf("NO is %s ", map->no);
+	printf("SO is %s ", map->so);
+	printf("WE is %s ", map->we);
+	printf("EA is %s ", map->ea);
 	printf("print map\n");
 	idx = 0;
 	while (map->map[idx])

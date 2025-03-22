@@ -12,34 +12,33 @@
 
 #include "../include/cub3d.h"
 
-void draw_floor_ceiling(t_data *data)
+void	draw_floor_ceiling(t_data *data)
 {
-	int x;
-	int y;
-	char *dst;
-	int color;
+	int		x;
+	int		y;
+	char	*dst;
+	int		color;
 
 	y = 0;
 	while (y < data->height)
 	{
 		if (y < (data->height / 2))
-			color = data->map.C;
+			color = data->map.c;
 		else
-			color = data->map.F;
+			color = data->map.f;
 		x = 0;
 		while (x < data->width)
 		{
-			dst = data->img.buffer + (y * data->img.line_bytes) 
+			dst = data->img.buffer + (y * data->img.line_bytes)
 				+ (x * (data->img.pixel_bits / 8));
 			*(unsigned int *)dst = color;
 			x++;
 		}
 		y++;
 	}
-
 }
 
-void init_player_direction(t_data *data)
+void	init_player_direction(t_data *data)
 {
 	if (data->cor.c == 'N')
 		data->cor.dir = -M_PI / 2;
@@ -51,11 +50,11 @@ void init_player_direction(t_data *data)
 		data->cor.dir = M_PI;
 }
 
-void find_obj(t_data *data)
+void	find_obj(t_data *data)
 {
-	int x;
-	int y;
-	static int cnt;
+	int			x;
+	int			y;
+	static int	cnt;
 
 	y = -1;
 	while (++y < data->map.map_height)
@@ -77,17 +76,17 @@ void find_obj(t_data *data)
 		printf("Chrater is only one! Check again!\n");
 		exit(1);
 	}
-	solve_Dfs2(data->map.map, data->cor.y, data->cor.x);
+	solve_dfs2(data->map.map, data->cor.y, data->cor.x);
 }
 
-void solve_Dfs2(char **map, int x, int y)
+void	solve_dfs2(char **map, int x, int y)
 {
 	if (map[x][y] == 'X')
 	{
 		printf("Error  Map style is not Good!");
 		exit (1);
 	}
-	else if(map[x][y] == '2' || map[x][y] == '1')
+	else if (map[x][y] == '2' || map[x][y] == '1')
 		return ;
 	solve_dfs(map, (x - 1), y);
 	solve_dfs(map, (x + 1), y);

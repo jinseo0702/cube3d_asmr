@@ -12,9 +12,9 @@
 
 #include "../include/cub3d.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_data data;
+	t_data	data;
 
 	if (check_args(argc, argv, &data) == 0)
 		return (1);
@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	return (0);
 }
 
-int check_args(int argc, char **argv, t_data *data)
+int	check_args(int argc, char **argv, t_data *data)
 {
 	if (argc != 2)
 	{
@@ -45,7 +45,7 @@ int check_args(int argc, char **argv, t_data *data)
 	return (TRUE);
 }
 
-void init_mlx(t_data *data)
+void	init_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (!data->mlx)
@@ -55,8 +55,8 @@ void init_mlx(t_data *data)
 	}
 }
 
-void init_window(t_data *data)
-{   
+void	init_window(t_data *data)
+{
 	data->win = mlx_new_window(data->mlx, data->width, data->height, "Cub3D");
 	if (!data->win)
 	{
@@ -66,7 +66,7 @@ void init_window(t_data *data)
 	}
 }
 
-void init_image(t_data *data)
+void	init_image(t_data *data)
 {
 	data->img.img = mlx_new_image(data->mlx, data->width, data->height);
 	data->img.buffer = mlx_get_data_addr(data->img.img, &data->img.pixel_bits,
