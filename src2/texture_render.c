@@ -24,7 +24,7 @@ void	draw_textured_wall(t_data *data, int x, t_ray ray, int wall_height)
 	tex.pixel_bits = tex_img->pixel_bits;
 	tex.tex_x = get_tex_x(data, &ray);
 	tex.height = wall_height;
-	draw_wall_line(data, x, tex.draw_start, tex.draw_end, tex);
+	draw_wall_line(data, x, tex);
 }
 
 void	draw_wall_line(t_data *data, int x, t_wall_tex tex)
