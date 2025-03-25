@@ -88,8 +88,8 @@ void	solve_dfs2(char **map, int x, int y)
 	}
 	else if (map[x][y] == '2' || map[x][y] == '1')
 		return ;
-	solve_dfs(map, (x - 1), y);
-	solve_dfs(map, (x + 1), y);
-	solve_dfs(map, x, (y - 1));
-	solve_dfs(map, x, (y + 1));
+	solve_dfs2(map, (x - 1), y);
+	solve_dfs2(map, (x + 1), y);
+	solve_dfs2(map, x, (y - 1));
+	solve_dfs2(map, x, (y + 1));
 }

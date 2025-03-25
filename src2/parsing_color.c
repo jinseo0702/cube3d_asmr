@@ -12,16 +12,16 @@
 
 #include "../include/cub3d.h"
 
-void	validate_rgb(int r, int g, int b)
+void	validate_rgb(int r, int g, int b, t_data *data)
 {
 	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
 	{
 		printf("Check range is not cool check again\n");
-		exit(1);
+		ft_exit_handling(data);
 	}
 }
 
-char	**split_rgb_parts(char *color_str)
+char	**split_rgb_parts(char *color_str, t_data *data, char **str)
 {
 	char	**rgb;
 
@@ -29,13 +29,14 @@ char	**split_rgb_parts(char *color_str)
 	if (ft_arraylen(rgb) != 3)
 	{
 		ft_free_array(rgb);
+		ft_free_array(str);
 		printf("Check color Syntex!\n");
-		exit(1);
+		ft_exit_handling(data);
 	}
 	return (rgb);
 }
 
-char	**split_color_line(char *line)
+char	**split_color_line(char *line, t_data *data)
 {
 	char	**parts;
 
@@ -44,7 +45,7 @@ char	**split_color_line(char *line)
 	{
 		ft_free_array(parts);
 		printf("Check color Syntex!\n");
-		exit(1);
+		ft_exit_handling(data);
 	}
 	return (parts);
 }
@@ -54,7 +55,7 @@ int	create_color(int r, int g, int b)
 	return ((r << 16) | (g << 8) | b);
 }
 
-int	parse_color(char *line)
+int	parse_color(char *line, t_data *data)
 {
 	int		r;
 	int		g;
@@ -62,13 +63,13 @@ int	parse_color(char *line)
 	char	**parts;
 	char	**rgb;
 
-	parts = split_color_line(line);
-	rgb = split_rgb_parts(parts[1]);
+	parts = split_color_line(line, data);
+	rgb = split_rgb_parts(parts[1], data, parts);
 	ft_free_array(parts);
 	r = ft_atoi(rgb[0]);
 	g = ft_atoi(rgb[1]);
 	b = ft_atoi(rgb[2]);
 	ft_free_array(rgb);
-	validate_rgb(r, g, b);
+	validate_rgb(r, g, b, data);
 	return (create_color(r, g, b));
 }

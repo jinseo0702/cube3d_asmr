@@ -13,9 +13,6 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
-# define TEX_WIDTH 64
-# define TEX_HEIGHT 64
-
 typedef struct s_allimg
 {
 	void	*img;
@@ -93,6 +90,7 @@ typedef struct s_data
 {
 	void				*mlx;
 	void				*win;
+	char				*temp;
 	int					width;
 	int					height;
 	double				fov;

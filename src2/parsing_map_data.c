@@ -24,7 +24,7 @@ void	copy_texture_path(char **dst, char *src)
 		*ptr = '\0';
 }
 
-void	handle_texture_data(char *str, t_map *map_data)
+void	handle_texture_data(char *str, t_map *map_data, t_data *data)
 {
 	if (ft_strncmp(str, "NO ", 3) == 0)
 		copy_texture_path(&map_data->no, str);
@@ -35,46 +35,44 @@ void	handle_texture_data(char *str, t_map *map_data)
 	else if (ft_strncmp(str, "EA ", 3) == 0)
 		copy_texture_path(&map_data->ea, str);
 	else if (ft_strncmp(str, "F ", 2) == 0)
-		map_data->f = parse_color(str);
+		map_data->f = parse_color(str, data);
 	else if (ft_strncmp(str, "C ", 2) == 0)
-		map_data->c = parse_color(str);
+		map_data->c = parse_color(str, data);
 }
 
-int	dup_info(char *str, t_map *map_data)
+int	dup_info(char *str, t_map *map_data, t_data *data)
 {
 	if (ft_onlyisspace(str) && map_data->exf > 255)
 		return (FALSE);
-	printf("%s, %d", str, map_data->exf);
-	handle_texture_data(str, map_data);
+	// printf("%s, %d", str, map_data->exf);
+	handle_texture_data(str, map_data, data);
 	if (map_data->exf <= 127)
-		is_right_map(str, map_data);
+		validate_map_line(str, map_data);
 	return (TRUE);
 }
 
-int	insert_data(t_map *map_data, char *map)
+int	insert_data(t_map *map_data, char *map, t_data *data)
 {
-	char	*temp;
-
 	map_data->fd = open(map, O_RDONLY);
 	if (map_data->fd < 0)
 		return (printf("Error Failed opne File.\n"), FALSE);
 	map_data->map = (char **)ft_calloc(sizeof(char *), (map_data->high));
 	map_data->map[0] = (char *)ft_calloc(sizeof(char), map_data->map_width + 2);
 	ft_memset(map_data->map[0], 'X', map_data->map_width + 1);
-	temp = get_next_line(map_data->fd);
-	while (temp)
+	data->temp = get_next_line(map_data->fd);
+	while (data->temp)
 	{
-		if (dup_info(temp, map_data) == 1 && map_data->exf ^ 127)
+		if (dup_info(data->temp, map_data, data) == 1 && map_data->exf ^ 127)
 			map_data->exf = (map_data->exf >> 1);
-		ft_freenull(&temp);
-		temp = get_next_line(map_data->fd);
+		ft_freenull(&data->temp);
+		data->temp = get_next_line(map_data->fd);
 	}
 	map_data->map[map_data->map_height] = ft_calloc(sizeof(char),
 			map_data->map_width + 2);
 	ft_memset(map_data->map[map_data->map_height], 'X',
 		map_data->map_width + 1);
-	flood_fill(map_data->map);
+	flood_fill(map_data->map, data);
 	print_all(map_data);
 	close(map_data->fd);
-	return (1);
+	return (TRUE);
 }

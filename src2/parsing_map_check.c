@@ -34,9 +34,10 @@ void	copy_and_process_map_line(t_map *map_data, char *str)
 		map_data->map[map_data->map_height][ft_strlen(str) + 1] = 'X';
 	else
 		map_data->map[map_data->map_height][map_data->map_width] = 'X';
+	map_data->map_height++;
 }
 
-void	validate_map_line(char *str)
+void	validate_map_line(char *str, t_map *map_data)
 {
 	int	idx;
 
@@ -49,11 +50,6 @@ void	validate_map_line(char *str)
 			exit(1);
 		}
 	}
+	copy_and_process_map_line(map_data, str);
 }
 
-void	is_right_map(char *str, t_map *map_data)
-{
-	validate_map_line(str);
-	copy_and_process_map_line(map_data, str);
-	map_data->map_height++;
-}

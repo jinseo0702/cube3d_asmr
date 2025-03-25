@@ -16,11 +16,11 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
+	init_cub3d_program(&data);
 	if (check_args(argc, argv, &data) == 0)
 		return (1);
-	init_mlx(&data);
-	init_cub3d_program(&data);
 	find_obj(&data);
+	init_mlx(&data);
 	init_player_direction(&data);
 	init_window(&data);
 	init_image(&data);
@@ -40,7 +40,7 @@ int	check_args(int argc, char **argv, t_data *data)
 	}
 	if (!map_check(argv[1], data))
 		return (FALSE);
-	if (!insert_data(&data->map, argv[1]))
+	if (!insert_data(&data->map, argv[1], data))
 		return (FALSE);
 	return (TRUE);
 }
@@ -60,7 +60,7 @@ void	init_window(t_data *data)
 	data->win = mlx_new_window(data->mlx, data->width, data->height, "Cub3D");
 	if (!data->win)
 	{
-		printf("Error\n윈도우 생성에 실패했습니다.\n");
+		printf("Error Failed Window init!.\n");
 		free(data->mlx);
 		exit(1);
 	}

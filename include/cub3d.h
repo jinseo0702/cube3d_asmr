@@ -33,6 +33,8 @@
 # define KEY_A		97
 # define KEY_D		100
 # define KEY_ESCAPE	65307
+# define TEX_WIDTH 64
+# define TEX_HEIGHT 64
 # define TRUE	1
 # define FALSE	0
 
@@ -45,26 +47,24 @@ int			map_check(char *map, t_data *data);
 void		init_t_map(t_map *map_data);
 int			check_size(t_map *map_data);
 int			check_arg(char *str);
-int			dup_info(char *str, t_map *map_data);
-void		is_right_map(char *str, t_map *map_data);
-int			insert_data(t_map *map_data, char *map);
+int			dup_info(char *str, t_map *map_data, t_data *data);
+int			insert_data(t_map *map_data, char *map, t_data *data);
 int			is_valid_map_char(char c);
 void		copy_and_process_map_line(t_map *map_data, char *str);
-void		validate_map_line(char *str);
-void		validate_rgb(int r, int g, int b);
-char		**split_rgb_parts(char *color_str);
-char		**split_color_line(char *line);
+void		validate_map_line(char *str, t_map *map_data);
+void		validate_rgb(int r, int g, int b, t_data *data);
+char		**split_rgb_parts(char *color_str, t_data *data, char **str);
+char		**split_color_line(char *line, t_data *data);
 int			create_color(int r, int g, int b);
-int			parse_color(char *line);
+int			parse_color(char *line, t_data *data);
 void		setup_events(t_data *data);
 int			ft_key_handling(int keycode, t_data *data);
 int			ft_exit_handling(void *param);
-void		update_view(t_data *data);
 int			handle_movement_keys(int keycode, t_data *data);
 void		move_player(t_data *data, int flag);
 void		rotate_player(t_data *data, int direction);
-void		solve_dfs(char **map, int x, int y);
-int			flood_fill(char **map);
+void		solve_dfs(char **map, int x, int y, t_data *data);
+int			flood_fill(char **map, t_data *data);
 void		print_all(t_map *map);
 int			ft_arraylen(char **array);
 void		ft_free_array(char **array);
@@ -76,8 +76,6 @@ void		calculate_delta_dist(t_ray *ray);
 void		calculate_step_side_dist(t_ray *ray, t_data *game);
 void		calculate_step_side_dist_x(t_ray *ray, t_data *game);
 void		calculate_step_side_dist_y(t_ray *ray, t_data *game);
-int			check_map_bounds(t_ray *ray, t_data *game);
-int			check_wall_hit(t_ray *ray, t_data *game);
 void		perform_dda(t_ray *ray, t_data *game);
 void		calculate_wall_distance(t_ray *ray, t_data *game);
 int			check_wall_collision(t_ray *ray, char **map, int width, int height);
@@ -99,8 +97,9 @@ double		correct_ray_distance(double corrected_dist, \
 							double ray_angle, t_data *data);
 int			get_texture_color(t_wall_tex *tex, double tex_pos);
 t_ray		cast_single_ray(t_data *game, double angle);
-t_allimg	*select_texture_x_side(t_ray ray, t_data *data);
-t_allimg	*select_texture_y_side(t_ray ray, t_data *data);
 t_allimg	*select_texture(t_ray ray, t_data *data);
+void		copy_texture_path(char **dst, char *src);
+void		handle_texture_data(char *str, t_map *map_data, t_data *data);
+void free_data(t_data *data);
 
 #endif

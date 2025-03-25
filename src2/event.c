@@ -23,16 +23,22 @@ int	ft_exit_handling(void *param)
 	t_data	*data;
 
 	data = (t_data *)param;
-	mlx_destroy_image(data->mlx, data->img.img);
-	mlx_destroy_window(data->mlx, data->win);
+	free_data(data);
+	if (data->tex_n.img)
+		mlx_destroy_image(data->mlx, data->tex_n.img);
+	if (data->tex_s.img)
+		mlx_destroy_image(data->mlx, data->tex_s.img);
+	if (data->tex_w.img)
+		mlx_destroy_image(data->mlx, data->tex_w.img);
+	if (data->tex_e.img)
+		mlx_destroy_image(data->mlx, data->tex_e.img);
+	if (data->img.img && data->mlx)
+		mlx_destroy_image(data->mlx, data->img.img);
+	if (data->win && data->mlx)
+		mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_display(data->mlx);
-	free(data->mlx);
+	ft_freenull(data->mlx);
 	exit(0);
-}
-
-void	update_view(t_data *data)
-{
-	render_3d(data);
 }
 
 int	handle_movement_keys(int keycode, t_data *data)
@@ -57,4 +63,14 @@ int	ft_key_handling(int keycode, t_data *data)
 	else if (handle_movement_keys(keycode, data))
 		render_3d(data);
 	return (0);
+}
+
+void	free_data(t_data *data)
+{
+	ft_freenull(&data->map.no);
+	ft_freenull(&data->map.so);
+	ft_freenull(&data->map.we);
+	ft_freenull(&data->map.ea);
+	ft_freenull(&data->temp);
+	ft_free_two(data->map.map);
 }

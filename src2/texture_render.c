@@ -38,6 +38,7 @@ void	draw_wall_line(t_data *data, int x, t_wall_tex tex)
 	step = (double)TEX_HEIGHT / tex.height;
 	tex_pos = (tex.draw_start - data->height / 2 + tex.height / 2) * step;
 	y = tex.draw_start;
+	printf("high %d &&&&& strep %f &&& pox %f---- \n", tex.height, step, tex_pos);
 	while (y < tex.draw_end)
 	{
 		color = get_texture_color(&tex, tex_pos);
@@ -50,6 +51,7 @@ void	draw_wall_line(t_data *data, int x, t_wall_tex tex)
 		}
 		++y;
 	}
+	printf("pox %f----222222 \n", tex_pos);
 }
 
 int	get_texture_color(t_wall_tex *tex, double tex_pos)
@@ -82,7 +84,7 @@ void	init_textures(t_data *data)
 			!data->tex_w.img || !data->tex_e.img)
 	{
 		printf("image load fail!! Check again!\n");
-		exit(1);
+		ft_exit_handling(data);
 	}
 	data->tex_n.buffer = mlx_get_data_addr(data->tex_n.img, \
 	&data->tex_n.pixel_bits, &data->tex_n.line_bytes, &data->tex_n.endian);

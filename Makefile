@@ -12,7 +12,6 @@
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-# CFLAGS = -g
 RM = rm -rf
 
 SRC = src2/main.c \

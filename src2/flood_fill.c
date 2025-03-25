@@ -12,23 +12,23 @@
 
 #include "../include/cub3d.h"
 
-void	solve_dfs(char **map, int x, int y)
+void	solve_dfs(char **map, int x, int y, t_data *data)
 {
 	if (map[x][y] == 'X')
 	{
-		printf("Error  Map style is not Good!");
-		exit (1);
+		printf("Error  Map style is not Good1!");
+		ft_exit_handling(data);
 	}
 	else if (map[x][y] != '0')
 		return ;
 	map[x][y] += 2;
-	solve_dfs(map, (x - 1), y);
-	solve_dfs(map, (x + 1), y);
-	solve_dfs(map, x, (y - 1));
-	solve_dfs(map, x, (y + 1));
+	solve_dfs(map, (x - 1), y, data);
+	solve_dfs(map, (x + 1), y, data);
+	solve_dfs(map, x, (y - 1), data);
+	solve_dfs(map, x, (y + 1), data);
 }
 
-int	flood_fill(char **map)
+int	flood_fill(char **map, t_data *data)
 {
 	int	x;
 	int	y;
@@ -39,7 +39,7 @@ int	flood_fill(char **map)
 		y = -1;
 		while (map[x][++y])
 			if (map[x][y] == '0')
-				solve_dfs(map, x, y);
+				solve_dfs(map, x, y, data);
 	}
 	return (TRUE);
 }
@@ -75,4 +75,17 @@ void	init_cub3d_program(t_data *data)
 	data->img.height = data->height;
 	data->fov = M_PI / 3;
 	data->status = 0;
+	data->map.no = NULL;
+	data->map.so = NULL;
+	data->map.we = NULL;
+	data->map.ea = NULL;
+	data->map.map = NULL;
+	data->tex_n.img = NULL;
+	data->tex_s.img = NULL;
+	data->tex_w.img = NULL;
+	data->tex_e.img = NULL;
+	data->mlx = NULL;
+	data->img.img = NULL;
+	data->win = NULL;
+	data->temp = NULL;
 }
