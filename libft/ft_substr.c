@@ -6,7 +6,7 @@
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 15:05:52 by jinseo            #+#    #+#             */
-/*   Updated: 2024/03/05 16:50:33 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:18:45 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		dst = (char *)ft_calloc(start + len + 1, sizeof(char));
 		if (!dst)
 			exit(1);
-			
 		return (dst);
 	}
 	dst = (char *)ft_calloc(start + len + 1, sizeof(char));

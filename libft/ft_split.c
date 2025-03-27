@@ -6,7 +6,7 @@
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 17:50:58 by jinseo            #+#    #+#             */
-/*   Updated: 2024/03/29 15:10:28 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:16:50 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ static char	*ft_save(const char *s, char c)
 	str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!str)
 		exit(1);
-		
 	while (i < len)
 	{
 		str[i] = s[i];
@@ -89,7 +88,6 @@ char	**ft_split(char const *s, char c)
 	str = (char **)malloc(sizeof(char *) * (cnt + 1));
 	if (!str)
 		exit(1);
-		
 	while (s[i])
 	{
 		if ((i == 0 && s[i] != c) || (s[i] != c && s[i - 1] == c && i != 0))

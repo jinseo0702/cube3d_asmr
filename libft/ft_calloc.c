@@ -6,7 +6,7 @@
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 17:15:04 by jinseo            #+#    #+#             */
-/*   Updated: 2024/03/29 15:01:18 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:15:39 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,9 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	cmp = nmemb * size;
 	if (!cmp && cmp / nmemb != size)
 		exit(1);
-		
 	reptr = (void *)malloc(size * nmemb);
 	if (!reptr)
 		exit(1);
-		
 	ft_memset(reptr, 0, size * nmemb);
 	return (reptr);
 }

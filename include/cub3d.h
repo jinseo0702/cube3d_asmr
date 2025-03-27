@@ -6,7 +6,7 @@
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 21:58:18 by jinseo            #+#    #+#             */
-/*   Updated: 2025/03/21 21:59:50 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:19:54 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,6 @@ t_ray		cast_single_ray(t_data *game, double angle);
 t_allimg	*select_texture(t_ray ray, t_data *data);
 void		copy_texture_path(char **dst, char *src);
 void		handle_texture_data(char *str, t_map *map_data, t_data *data);
-void free_data(t_data *data);
+void		free_data(t_data *data);
 
 #endif

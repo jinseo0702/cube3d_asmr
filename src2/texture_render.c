@@ -6,7 +6,7 @@
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 21:58:21 by jinseo            #+#    #+#             */
-/*   Updated: 2025/03/22 17:39:48 by hyunahn          ###   ########.fr       */
+/*   Updated: 2025/03/27 20:12:31 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	draw_wall_line(t_data *data, int x, t_wall_tex tex)
 	step = (double)TEX_HEIGHT / tex.height;
 	tex_pos = (tex.draw_start - data->height / 2 + tex.height / 2) * step;
 	y = tex.draw_start;
-	printf("high %d &&&&& strep %f &&& pox %f---- \n", tex.height, step, tex_pos);
 	while (y < tex.draw_end)
 	{
 		color = get_texture_color(&tex, tex_pos);
@@ -51,7 +50,6 @@ void	draw_wall_line(t_data *data, int x, t_wall_tex tex)
 		}
 		++y;
 	}
-	printf("pox %f----222222 \n", tex_pos);
 }
 
 int	get_texture_color(t_wall_tex *tex, double tex_pos)

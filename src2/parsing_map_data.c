@@ -6,7 +6,7 @@
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 21:57:46 by jinseo            #+#    #+#             */
-/*   Updated: 2025/03/21 21:57:21 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:12:11 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	dup_info(char *str, t_map *map_data, t_data *data)
 {
 	if (ft_onlyisspace(str) && map_data->exf > 255)
 		return (FALSE);
-	// printf("%s, %d", str, map_data->exf);
 	handle_texture_data(str, map_data, data);
 	if (map_data->exf <= 127)
 		validate_map_line(str, map_data);
@@ -72,7 +71,6 @@ int	insert_data(t_map *map_data, char *map, t_data *data)
 	ft_memset(map_data->map[map_data->map_height], 'X',
 		map_data->map_width + 1);
 	flood_fill(map_data->map, data);
-	print_all(map_data);
 	close(map_data->fd);
 	return (TRUE);
 }

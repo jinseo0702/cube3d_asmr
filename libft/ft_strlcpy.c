@@ -6,7 +6,7 @@
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:51:32 by jinseo            #+#    #+#             */
-/*   Updated: 2024/02/29 22:03:20 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:18:29 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	cnt = 0;
 	if (size <= 0)
 		return (ft_strlen(src));
-	while (*(src + cnt) && cnt  + 1 < size)
+	while (*(src + cnt) && cnt + 1 < size)
 	{
 		*(dst + cnt) = *(src + cnt);
 		cnt++;

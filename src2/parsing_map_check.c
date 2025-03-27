@@ -6,7 +6,7 @@
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 21:57:43 by jinseo            #+#    #+#             */
-/*   Updated: 2025/03/21 21:57:13 by jinseo           ###   ########.fr       */
+/*   Updated: 2025/03/27 20:11:57 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,3 @@ void	validate_map_line(char *str, t_map *map_data)
 	}
 	copy_and_process_map_line(map_data, str);
 }
-

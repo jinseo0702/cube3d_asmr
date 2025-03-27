@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_isinstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 18:13:57 by jinseo            #+#    #+#             */
-/*   Updated: 2025/03/27 20:17:32 by jinseo           ###   ########.fr       */
+/*   Created: 2024/02/27 14:25:11 by jinseo            #+#    #+#             */
+/*   Updated: 2025/03/27 20:15:18 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+int	ft_isinstr(int c, const char *str)
 {
-	char	*dest;
-	int		i;
+	unsigned char	as;
 
-	dest = (char *)malloc((sizeof(char) * ft_strlen(s)) + 1);
-	i = 0;
-	if (dest == NULL)
-		exit(1);
-	while (*(s + i) != '\0')
-	{
-		*(dest + i) = *(s + i);
-		i++;
+	as = (unsigned char)c;
+	while (*str)
+    {
+		if (c == *str)
+			return (1);
+		str++;
 	}
-	*(dest + i) = '\0';
-	return (dest);
+	return (0);
 }

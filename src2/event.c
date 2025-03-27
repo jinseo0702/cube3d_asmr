@@ -37,7 +37,7 @@ int	ft_exit_handling(void *param)
 	if (data->win && data->mlx)
 		mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_display(data->mlx);
-	ft_freenull(data->mlx);
+	free(data->mlx);
 	exit(0);
 }
 
