@@ -48,10 +48,7 @@ double	correct_ray_distance(double corrected_dist,
 
 	correction = cos(ray_angle - data->cor.dir);
 	corrected_dist = corrected_dist * correction;
-	if (corrected_dist < 0.1)
-		return (0.1);
-	else
-		return (corrected_dist);
+	return (corrected_dist);
 }
 
 int	calculate_wall_height(t_data *data, double corrected_dist)

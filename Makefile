@@ -40,7 +40,7 @@ all : $(NAME)
 $(NAME): $(OBJS)
 	@make -C minilibx-linux/
 	@make -C libft/
-	@$(CC) $(OBJS) -no-pie -Lmlx_linux -lmlx_Linux -L$(MLX) -lXext -lX11 -lm -lz -L libft/ -lft -o $(NAME)
+	@$(CC) $(OBJS) -no-pie -Lmlx_linux -lmlx_Linux -L$(MLX)  -fsanitize=address -lXext -lX11 -lm -lz -L libft/ -lft -o $(NAME)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -I$(MLX) -Imlx_linux -O3 -c $< -o $@

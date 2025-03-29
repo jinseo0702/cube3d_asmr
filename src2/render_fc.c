@@ -65,8 +65,8 @@ void	find_obj(t_data *data)
 			if ((ft_isinstr(data->map.map[y][x], "NSWE")))
 			{
 				data->cor.c = data->map.map[y][x];
-				data->cor.x = x;
-				data->cor.y = y;
+				data->cor.x = x + 0.5;
+				data->cor.y = y + 0.5;
 				cnt++;
 			}
 		}

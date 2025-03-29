@@ -62,6 +62,7 @@ int			ft_key_handling(int keycode, t_data *data);
 int			ft_exit_handling(void *param);
 int			handle_movement_keys(int keycode, t_data *data);
 void		move_player(t_data *data, int flag);
+void		move_player2(t_data *data, int flag);
 void		rotate_player(t_data *data, int direction);
 void		solve_dfs(char **map, int x, int y, t_data *data);
 int			flood_fill(char **map, t_data *data);

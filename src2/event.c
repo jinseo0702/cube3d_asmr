@@ -36,8 +36,11 @@ int	ft_exit_handling(void *param)
 		mlx_destroy_image(data->mlx, data->img.img);
 	if (data->win && data->mlx)
 		mlx_destroy_window(data->mlx, data->win);
-	mlx_destroy_display(data->mlx);
-	free(data->mlx);
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+	}
 	exit(0);
 }
 
@@ -47,9 +50,13 @@ int	handle_movement_keys(int keycode, t_data *data)
 		move_player(data, KEY_UP);
 	else if (keycode == KEY_DOWN || keycode == KEY_S)
 		move_player(data, KEY_DOWN);
-	else if (keycode == KEY_LEFT || keycode == KEY_A)
+	else if (keycode == KEY_A)
+		move_player2(data, KEY_A);
+	else if (keycode == KEY_D)
+		move_player2(data, KEY_D);
+	else if (keycode == KEY_LEFT)
 		rotate_player(data, -1);
-	else if (keycode == KEY_RIGHT || keycode == KEY_D)
+	else if (keycode == KEY_RIGHT)
 		rotate_player(data, 1);
 	else
 		return (0);

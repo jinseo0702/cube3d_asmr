@@ -19,16 +19,45 @@ void	move_player(t_data *data, int flag)
 
 	if (flag == KEY_UP)
 	{
-		new_x = data->cor.x + cos(data->cor.dir) * 0.1;
-		new_y = data->cor.y + sin(data->cor.dir) * 0.1;
+		new_x = data->cor.x + cos(data->cor.dir) * 0.133;
+		new_y = data->cor.y + sin(data->cor.dir) * 0.133;
 	}
 	else
 	{
-		new_x = data->cor.x - cos(data->cor.dir) * 0.1;
-		new_y = data->cor.y - sin(data->cor.dir) * 0.1;
+		new_x = data->cor.x - cos(data->cor.dir) * 0.133;
+		new_y = data->cor.y - sin(data->cor.dir) * 0.133;
 	}
-	if (data->map.map[(int)new_y][(int)new_x] != '1' &&
-			data->map.map[(int)new_y][(int)new_x] != 'X')
+	if (data->map.map[(int)data->cor.y][(int)new_x] != '1' &&
+			data->map.map[(int)data->cor.y][(int)new_x] != 'X' &&
+				data->map.map[(int)new_y][(int)data->cor.x] != '1' &&
+					data->map.map[(int)new_y][(int)data->cor.x] != 'X')
+	{
+		data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
+		data->cor.x = new_x;
+		data->cor.y = new_y;
+		data->map.map[(int)data->cor.y][(int)data->cor.x] = data->cor.c;
+	}
+}
+
+void	move_player2(t_data *data, int flag)
+{
+	double	new_x;
+	double	new_y;
+
+	if (flag == KEY_A)
+	{
+		new_x = data->cor.x + sin(data->cor.dir) * 0.133;
+		new_y = data->cor.y - cos(data->cor.dir) * 0.133;
+	}
+	else
+	{
+		new_x = data->cor.x - sin(data->cor.dir) * 0.133;
+		new_y = data->cor.y + cos(data->cor.dir) * 0.133;
+	}
+	if (data->map.map[(int)data->cor.y][(int)new_x] != '1' &&
+			data->map.map[(int)data->cor.y][(int)new_x] != 'X' &&
+				data->map.map[(int)new_y][(int)data->cor.x] != '1' &&
+					data->map.map[(int)new_y][(int)data->cor.x] != 'X')
 	{
 		data->map.map[(int)data->cor.y][(int)data->cor.x] = '2';
 		data->cor.x = new_x;
