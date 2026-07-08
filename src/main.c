@@ -1,63 +1,57 @@
-#include "cub3d.h"
+#include "../include/cub3d.h"
+#include "../include/platform.h"
 
-// 생각해보아야할 것
-//기본적으로 argv에 .cub파일만 받아오는지
-
-int	ft_key_handling(int keycode, t_data *data)  //이건 esc 컨트롤
+static int	usage(void)
 {
-	if (keycode == 65307)
+	ft_putstr_fd("Error\nusage: ./cub3D <map.cub> "
+		"[--screenshot <out.ppm>] [--frames <n>]\n", 2);
+	return (1);
+}
+
+static int	parse_args(int argc, char **argv, const char **shot, int *frames)
+{
+	int	i;
+
+	i = 1;
+	while (++i < argc)
 	{
-		mlx_destroy_image(data->mlx, data->img.img);
-		mlx_destroy_window(data->mlx, data->win);
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-		exit(0);
+		if (ft_strncmp(argv[i], "--screenshot", 13) == 0 && i + 1 < argc)
+			*shot = argv[++i];
+		else if (ft_strncmp(argv[i], "--frames", 9) == 0 && i + 1 < argc)
+			*frames = ft_atoi(argv[++i]);
+		else
+			return (-1);
 	}
-}
-int	ft_exit_handling(void *param)   // 이건 크로스 표시 컨트롤
-{
-	t_data	*data;
-
-	data = (t_data *)param;
-	mlx_destroy_image(data->mlx, data->img.img);
-	mlx_destroy_window(data->mlx, data->win);
-	mlx_destroy_display(data->mlx);
-	free(data->mlx);
-	exit (0);
+	return (0);
 }
 
-void	init_cub3d_program(t_data *data)
+static int	run_headless(t_game *game, const char *out_path)
 {
-	data->width = 2000;
-	data->height = 2000;
-	data->img.width = data->width;
-	data->img.height = data->height;
+	int	ret;
+
+	render_frame(game);
+	ret = fb_write_ppm(&game->fb, out_path);
+	game_destroy(game);
+	return (ret < 0);
 }
 
-int     main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_data  data;
-    int fd;
+	t_game		game;
+	const char	*screenshot;
+	int			max_frames;
 
-    /*
-    fd = open (argv[1], O_RDONLY);
-    if (fd < 0)
-	{	
-		perror("ERROR");
-		exit(1);
-	}
-    close(fd);
-    */
-   	parsing_map(argv);
-    data.mlx = mlx_init();
-    init_cub3d_program(&data);    //데이타를 초기화 합니다
-    mlx_get_screen_size(data.mlx, &data.width, &data.height);
-    data.win = mlx_new_window (data.mlx, data.width, data.height, "LOVE");
-    data.img.img = mlx_new_image(data.mlx, data.img.width, data.img.height);
-    data.img.buffer = mlx_get_data_addr(data.img.img, &data.img.pixel_bits,
-			&data.img.line_bytes, &data.img.endian);
-    //여기에 파싱한 맵 데이터를 이미지로 찍어내는 함수를 넣어야할 듯 합니다
-    mlx_key_hook(data.win, ft_key_handling, &data);
-    mlx_hook(data.win, 17, 0, ft_exit_handling, &data);
-    mlx_loop (data.mlx);
+	screenshot = NULL;
+	max_frames = 0;
+	if (argc < 2 || parse_args(argc, argv, &screenshot, &max_frames) < 0)
+		return (usage());
+	if (game_init(&game, argv[1]) < 0)
+		return (game_destroy(&game), 1);
+	game.max_frames = max_frames;
+	if (screenshot)
+		return (run_headless(&game, screenshot));
+	if (platform_run(&game) < 0)
+		return (game_destroy(&game), 1);
+	game_destroy(&game);
+	return (0);
 }

@@ -1,47 +1,78 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jinseo <marvin@42.fr>                      +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/31 16:11:14 by jinseo            #+#    #+#              #
-#    Updated: 2024/07/31 19:30:09 by jinseo           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME       := cub3D
+CC         := cc
+CFLAGS     := -Wall -Wextra -Werror -O2 -Iinclude -Ilibft
+UNAME      := $(shell uname -s)
 
-CC = cc
-# CFLAGS = -Wall -Wextra -Werror
-CFLAGS = -g
-RM = rm -rf
+# Backend selection: SDL2 on macOS, MinilibX (X11) on Linux.
+# Override with `make BACKEND=sdl2` or `make BACKEND=mlx`.
+ifeq ($(UNAME),Darwin)
+BACKEND    ?= sdl2
+else
+BACKEND    ?= mlx
+endif
 
-SRC = src/main.c
+CORE_SRCS  := src/main.c \
+              src/parser/parse_scene.c \
+              src/parser/parse_config.c \
+              src/parser/parse_map.c \
+              src/parser/validate_map.c \
+              src/parser/read_lines.c \
+              src/engine/game.c \
+              src/engine/player.c \
+              src/render/raycast.c \
+              src/render/framebuffer.c \
+              src/render/texture.c \
+              src/render/minimap.c
 
-MLX = ./minilibx-linux
+ifeq ($(BACKEND),sdl2)
+SRCS           := $(CORE_SRCS) src/platform/platform_sdl2.c
+BACKEND_CFLAGS := $(shell sdl2-config --cflags)
+BACKEND_LIBS   := $(shell sdl2-config --libs)
+BACKEND_DEP    :=
+else
+MLX_DIR        := minilibx-linux
+MLX_URL        := https://github.com/42Paris/minilibx-linux.git
+SRCS           := $(CORE_SRCS) src/platform/platform_mlx.c
+BACKEND_CFLAGS := -I$(MLX_DIR)
+BACKEND_LIBS   := -L$(MLX_DIR) -lmlx -lXext -lX11
+BACKEND_DEP    := $(MLX_DIR)/libmlx.a
+endif
 
-OBJS = $(SRC:.c=.o)
-NAME = cub3D
+LIBFT      := libft/libft.a
+OBJ_DIR    := build
+OBJS       := $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
-all : $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJS)
-	@make -C minilibx-linux/
-	@make -C libft/
-	@$(CC) $(OBJS) -Lmlx_linux -lmlx_Linux -L$(MLX) -lXext -lX11 -lm -lz -L libft/ -lft -o $(NAME)
+$(NAME): $(BACKEND_DEP) $(LIBFT) $(OBJS)
+	$(CC) $(OBJS) $(BACKEND_LIBS) -Llibft -lft -lm -o $(NAME)
 
-%.o : %.c
-	@$(CC) $(CFLAGS) -I$(MLX) -Imlx_linux -O3 -c $< -o $@
+$(OBJ_DIR)/%.o: %.c include/cub3d.h include/platform.h
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(BACKEND_CFLAGS) -c $< -o $@
 
-clean :
-	@make clean -C libft/
-	@$(RM) $(OBJS)
+$(LIBFT):
+	$(MAKE) -C libft
 
-fclean :
-	@make fclean -C libft/
-	@$(RM) $(OBJS) $(NAME)
+ifeq ($(BACKEND),mlx)
+$(MLX_DIR)/Makefile:
+	git clone --depth 1 $(MLX_URL) $(MLX_DIR)
 
-re : 
-	@make fclean
-	@make all
+$(MLX_DIR)/libmlx.a: $(MLX_DIR)/Makefile
+	$(MAKE) -C $(MLX_DIR)
+endif
 
-.PHONY: all clean fclean re
+test: $(NAME)
+	sh tests/run_tests.sh
+
+clean:
+	$(MAKE) clean -C libft
+	rm -rf $(OBJ_DIR)
+
+fclean: clean
+	$(MAKE) fclean -C libft
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re test

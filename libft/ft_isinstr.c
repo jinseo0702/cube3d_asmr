@@ -14,14 +14,11 @@
 
 int	ft_isinstr(int c, const char *str)
 {
-	unsigned char	as;
-
-	as = (unsigned char)c;
 	while (*str)
-    {
-        if (c == *str)
-            return (1);
-        str++;
-    }
+	{
+		if (c == *str)
+			return (1);
+		str++;
+	}
 	return (0);
 }
