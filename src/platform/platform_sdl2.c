@@ -55,6 +55,10 @@ static void	handle_key(t_game *game, SDL_Keycode key, bool down)
 		game->keys.turn_l = down;
 	else if (key == SDLK_RIGHT)
 		game->keys.turn_r = down;
+	else if (key == SDLK_SPACE)
+		game->keys.jump = down;
+	else if (key == SDLK_r && down)
+		game->keys.reset = true;
 	else if (key == SDLK_ESCAPE)
 		game->keys.quit = true;
 	else if (key == SDLK_m && down)
@@ -73,6 +77,11 @@ static void	poll_events(t_game *game)
 			handle_key(game, event.key.keysym.sym, true);
 		else if (event.type == SDL_KEYUP)
 			handle_key(game, event.key.keysym.sym, false);
+		else if (event.type == SDL_MOUSEMOTION)
+		{
+			game->keys.turn += event.motion.xrel * MOUSE_SENS;
+			game->keys.look -= event.motion.yrel * MOUSE_SENS * 0.4;
+		}
 	}
 }
 
@@ -86,6 +95,7 @@ int	platform_run(t_game *game)
 	ft_memset(&sdl, 0, sizeof(t_sdl));
 	if (sdl_create(&sdl, game) < 0)
 		return (sdl_destroy(&sdl), -1);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 	frames = 0;
 	prev = SDL_GetPerformanceCounter();
 	while (!game->keys.quit)

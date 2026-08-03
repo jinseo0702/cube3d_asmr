@@ -44,6 +44,10 @@ static int	set_key(t_game *game, int keysym, bool down)
 		game->keys.turn_l = down;
 	else if (keysym == XK_RIGHT)
 		game->keys.turn_r = down;
+	else if (keysym == ' ')
+		game->keys.jump = down;
+	else if (keysym == 'r' && down)
+		game->keys.reset = true;
 	else if (keysym == XK_ESCAPE)
 		game->keys.quit = true;
 	else if (keysym == 'm' && down)

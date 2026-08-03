@@ -55,6 +55,8 @@ int	validate_map(t_map *map)
 	t_flood	f;
 	int		ret;
 
+	if (map->terrain)
+		return (0);
 	f.map = map;
 	f.top = 0;
 	f.visited = ft_calloc(map->width * map->height, sizeof(bool));

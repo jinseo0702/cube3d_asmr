@@ -11,19 +11,43 @@ static int	register_player(t_map *map, int x, int y)
 	return (0);
 }
 
-static int	scan_cells(t_map *map)
+/*
+** Any height digit 2-9 flags the grid as a terrain heightmap; plain
+** wall maps keep the strict 0/1 charset (and the flood-fill check).
+*/
+static void	detect_terrain(t_map *map)
 {
 	int	x;
 	int	y;
 
+	y = -1;
+	while (++y < map->height)
+	{
+		x = -1;
+		while (++x < map->width)
+			if (map->grid[y][x] >= '2' && map->grid[y][x] <= '9')
+				map->terrain = true;
+	}
+}
+
+static int	scan_cells(t_map *map)
+{
+	const char	*charset;
+	int			x;
+	int			y;
+
+	detect_terrain(map);
+	charset = "01NSEWG ";
+	if (map->terrain)
+		charset = "0123456789NSEWG ";
 	y = 0;
 	while (y < map->height)
 	{
 		x = 0;
 		while (x < map->width)
 		{
-			if (!ft_isinstr(map->grid[y][x], "01NSEW "))
-				return (error_msg("map may only contain 0, 1, N, S, E, W"));
+			if (!ft_isinstr(map->grid[y][x], (char *)charset))
+				return (error_msg("map may only contain 0, 1, N, S, E, W, G"));
 			if (ft_isinstr(map->grid[y][x], "NSEW")
 				&& register_player(map, x, y) < 0)
 				return (-1);

@@ -4,7 +4,7 @@ static void	init_ray(t_game *game, t_ray *ray, int x)
 {
 	double	camera_x;
 
-	camera_x = 2.0 * x / game->fb.width - 1.0;
+	camera_x = (2.0 * x / game->fb.width - 1.0) * game->fov_scale;
 	ray->dir_x = game->player.dir_x + game->player.plane_x * camera_x;
 	ray->dir_y = game->player.dir_y + game->player.plane_y * camera_x;
 	ray->map_x = (int)game->player.x;
@@ -38,8 +38,7 @@ static void	init_ray(t_game *game, t_ray *ray, int x)
 */
 static void	cast_ray(t_game *game, t_ray *ray)
 {
-	char	cell;
-
+	ray->cell = '1';
 	while (1)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
@@ -56,9 +55,12 @@ static void	cast_ray(t_game *game, t_ray *ray)
 		}
 		if (ray->map_x < 0 || ray->map_x >= game->map.width
 			|| ray->map_y < 0 || ray->map_y >= game->map.height)
+		{
+			ray->cell = '1';
 			break ;
-		cell = game->map.grid[ray->map_y][ray->map_x];
-		if (cell == '1' || cell == ' ')
+		}
+		ray->cell = game->map.grid[ray->map_y][ray->map_x];
+		if (ray->cell == '1' || ray->cell == ' ' || ray->cell == 'G')
 			break ;
 	}
 	if (ray->side == 0)
@@ -97,6 +99,26 @@ static int	wall_tex_x(t_game *game, t_ray *ray, t_tex *tex)
 	return (tex_x);
 }
 
+/*
+** The finish gate is a wall the rays see but the body passes through:
+** a checkered curtain drawn procedurally, no texture file involved.
+*/
+static uint32_t	goal_color(t_game *game, t_ray *ray, double v)
+{
+	double	u;
+	int		check;
+
+	if (ray->side == 0)
+		u = game->player.y + ray->dist * ray->dir_y;
+	else
+		u = game->player.x + ray->dist * ray->dir_x;
+	u -= floor(u);
+	check = ((int)(u * 8) + (int)(v * 8)) % 2;
+	if (check)
+		return (0xFFF2F2F2);
+	return (0xFFE0323C);
+}
+
 static void	draw_column(t_game *game, t_ray *ray, int x)
 {
 	t_tex		*tex;
@@ -115,8 +137,11 @@ static void	draw_column(t_game *game, t_ray *ray, int x)
 	{
 		if (y < 0 || y >= game->fb.height)
 			continue ;
-		color = tex->pixels[(int)((double)(y - top) / line_h * tex->height)
-			* tex->width + tex_x];
+		if (ray->cell == 'G')
+			color = goal_color(game, ray, (double)(y - top) / line_h);
+		else
+			color = tex->pixels[(int)((double)(y - top) / line_h
+					* tex->height) * tex->width + tex_x];
 		if (ray->side == 1)
 			color = ((color >> 1) & 0x7F7F7F) | 0xFF000000;
 		fb_put_pixel(&game->fb, x, y, color);
@@ -129,6 +154,12 @@ void	render_frame(t_game *game)
 	int		x;
 	int		y;
 
+	if (game->map.terrain)
+	{
+		render_terrain(game);
+		render_hud(game);
+		return ;
+	}
 	y = -1;
 	while (++y < game->fb.height / 2)
 	{
@@ -152,4 +183,5 @@ void	render_frame(t_game *game)
 	}
 	if (game->show_minimap)
 		render_minimap(game);
+	render_hud(game);
 }

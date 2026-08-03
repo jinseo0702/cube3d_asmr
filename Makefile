@@ -19,10 +19,13 @@ CORE_SRCS  := src/main.c \
               src/parser/read_lines.c \
               src/engine/game.c \
               src/engine/player.c \
+              src/engine/ski.c \
               src/render/raycast.c \
               src/render/framebuffer.c \
               src/render/texture.c \
-              src/render/minimap.c
+              src/render/minimap.c \
+              src/render/hud.c \
+              src/render/terrain.c
 
 ifeq ($(BACKEND),sdl2)
 SRCS           := $(CORE_SRCS) src/platform/platform_sdl2.c

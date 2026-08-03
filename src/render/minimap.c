@@ -36,6 +36,8 @@ static void	draw_cell(t_game *game, int cx, int cy, int tile)
 	color = 0xFF20242C;
 	if (game->map.grid[cy][cx] == '1')
 		color = 0xFFAAB4C8;
+	else if (game->map.grid[cy][cx] == 'G')
+		color = 0xFF57E389;
 	y = -1;
 	while (++y < tile - 1)
 	{
